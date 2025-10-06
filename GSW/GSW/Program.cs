@@ -1,9 +1,12 @@
 
+using GSW_Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace GSW
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -19,13 +22,19 @@ namespace GSW
                 app.UseSwaggerUI();
             }
 
+            using(var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<GSWDbContext>();
+                await context.Database.MigrateAsync();
+            }
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
             app.MapControllers();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }
