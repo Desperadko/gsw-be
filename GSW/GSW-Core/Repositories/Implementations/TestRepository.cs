@@ -22,7 +22,7 @@ namespace GSW_Core.Repositories.Implementations
 
         public Task<TestModel?> GetTestRecord(int id)
         {
-            return dbContext.Tests.FirstOrDefaultAsync(r => r.Id == id) ?? throw new ArgumentException($"No such record with Id: {id} exists.");
+            return dbContext.Tests.FirstOrDefaultAsync(r => r.Id == id);
         }
         public async Task<int> AddTestRecord(int someValue)
         {

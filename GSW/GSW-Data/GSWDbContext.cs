@@ -8,5 +8,7 @@ namespace GSW_Data
         public GSWDbContext(DbContextOptions<GSWDbContext> options) : base(options) { }
 
         public DbSet<TestModel> Tests { get; set; } = null!;
+
+        public DbSet<Account> Accounts { get; set; } = null!;
     }
 }

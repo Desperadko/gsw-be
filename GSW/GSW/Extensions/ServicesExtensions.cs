@@ -4,6 +4,7 @@ using GSW_Core.Services.Implementations;
 using GSW_Core.Services.Interfaces;
 using GSW_Data;
 using Microsoft.EntityFrameworkCore;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 namespace GSW.Extensions
 {
@@ -37,6 +38,16 @@ namespace GSW.Extensions
             services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<ITestService, TestService>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddValidation(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation(configuration =>
+            {
+                configuration.EnableFormBindingSourceAutomaticValidation = true;
+                configuration.EnablePathBindingSourceAutomaticValidation = true;
+            });
             return services;
         }
     }

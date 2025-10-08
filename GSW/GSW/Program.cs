@@ -16,6 +16,7 @@ namespace GSW
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddServices(builder.Configuration);
+            builder.Services.AddValidation();
 
             var app = builder.Build();
 
