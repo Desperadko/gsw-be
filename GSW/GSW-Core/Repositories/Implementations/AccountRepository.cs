@@ -25,6 +25,11 @@ namespace GSW_Core.Repositories.Implementations
             return await dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == id);
         }
 
+        public async Task<Account?> GetByUsername(string username)
+        {
+            return await dbContext.Accounts.FirstOrDefaultAsync(a => a.Username == username);
+        }
+
         public async Task<int> Add(Account account)
         {
             await dbContext.Accounts.AddAsync(account);
@@ -44,6 +49,11 @@ namespace GSW_Core.Repositories.Implementations
         public async Task<bool> EmailExists(string email)
         {
             return await dbContext.Accounts.AnyAsync(a => a.Email == email);
+        }
+
+        public async Task SaveChanges()
+        {
+            await dbContext.SaveChangesAsync();
         }
     }
 }

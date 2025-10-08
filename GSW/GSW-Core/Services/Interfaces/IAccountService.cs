@@ -1,6 +1,7 @@
 ﻿using GSW_Core.DTOs.Account;
 using GSW_Core.Requests;
 using GSW_Core.Responses;
+using GSW_Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace GSW_Core.Services.Interfaces
 {
     public interface IAccountService
     {
-        Task<RegisterResponse> Register(RegisterRequest registerRequest);
-        Task<LoginResponse> Login(LoginRequest dto);
+        Task<Account> Get(string username);
+        Task<RegisterResponse> Register(RegisterRequest request);
+        Task<LoginResponse> Login(LoginRequest request);
     }
 }

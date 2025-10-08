@@ -16,13 +16,18 @@ namespace GSW_Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "Username is reqiured")]
         [MaxLength(AccountConstants.USERNAME_MAX_LENGTH)]
         public required string Username { get; set; }
 
+        [Required(ErrorMessage = "Email is required")]
         [MaxLength(AccountConstants.EMAIL_MAX_LENGTH)]
         public required string Email { get; set; }
 
+        [Required(ErrorMessage = "Password is required")]
         [MaxLength(AccountConstants.PASSWORD_MAX_LENGTH)]
-        public required string Password { get; set; }
+        public string Password { get; set; } = "";
+
+        public bool IsVaild => !string.IsNullOrEmpty(Password);
     }
 }

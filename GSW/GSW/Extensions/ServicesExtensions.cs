@@ -1,8 +1,12 @@
-﻿using GSW_Core.Repositories.Implementations;
+﻿using FluentValidation;
+using GSW_Core.Repositories.Implementations;
 using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Implementations;
 using GSW_Core.Services.Interfaces;
+using GSW_Core.Validators;
 using GSW_Data;
+using GSW_Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
@@ -36,13 +40,19 @@ namespace GSW.Extensions
             services.AddDbContext<GSWDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddScoped<ITestRepository, TestRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+
             services.AddScoped<ITestService, TestService>();
+            services.AddScoped<IAccountService, AccountService>();
+
+            services.AddScoped<IPasswordHasher<Account>, PasswordHasher<Account>>();
 
             return services;
         }
 
         public static IServiceCollection AddValidation(this IServiceCollection services)
         {
+            services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
             services.AddFluentValidationAutoValidation(configuration =>
             {
                 configuration.EnableFormBindingSourceAutomaticValidation = true;
