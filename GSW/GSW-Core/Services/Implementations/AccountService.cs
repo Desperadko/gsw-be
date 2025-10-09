@@ -3,6 +3,7 @@ using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Requests;
 using GSW_Core.Responses;
 using GSW_Core.Services.Interfaces;
+using GSW_Core.Utilities.Constants;
 using GSW_Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -16,13 +17,16 @@ namespace GSW_Core.Services.Implementations
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository accountRepository;
+        private readonly IJwtService jwtService;
         private readonly IPasswordHasher<Account> passwordHasher;
 
         public AccountService(
             IAccountRepository accountRepository,
+            IJwtService jwtService,
             IPasswordHasher<Account> passwordHasher)
         {
             this.accountRepository = accountRepository;
+            this.jwtService = jwtService;
             this.passwordHasher = passwordHasher;
         }
 
@@ -43,15 +47,16 @@ namespace GSW_Core.Services.Implementations
             {
                 Username = dto.Username,
                 Email = dto.Email,
+                Role = RoleConstants.User
             };
 
             account.Password = passwordHasher.HashPassword(account, request.Password);
 
-            //token aqcuisition
+            var token = jwtService.GenerateToken(account);
 
             var response = new RegisterResponse
             {
-                Token = "",
+                Token = token,
                 Account = dto,
             };
 
@@ -91,6 +96,8 @@ namespace GSW_Core.Services.Implementations
 
             var result = passwordHasher.VerifyHashedPassword(account, account.Password, request.Password);
 
+            var token = jwtService.GenerateToken(account);
+
             switch (result)
             {
                 case PasswordVerificationResult.Failed:
@@ -121,7 +128,7 @@ namespace GSW_Core.Services.Implementations
 
             var response = new LoginResponse
             {
-                Token = "",
+                Token = token,
                 Account = dto,
             };
 

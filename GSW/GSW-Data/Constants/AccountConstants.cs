@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Data.Constants
 {
-    public static class AccountConstants
+    public class AccountConstants
     {
         public const int USERNAME_MAX_LENGTH = 32;
         public const int EMAIL_MAX_LENGTH = 64;
