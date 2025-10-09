@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,10 @@ namespace GSW_Data.Models
         [Required(ErrorMessage = "Password is required")]
         [MaxLength(AccountConstants.PASSWORD_MAX_LENGTH)]
         public string Password { get; set; } = "";
+
+        [Required(ErrorMessage = "No role set")]
+        [MaxLength(AccountConstants.ROLE_MAX_LENGTH)]
+        public required string Role { get; set; } = "User";
 
         public bool IsVaild => !string.IsNullOrEmpty(Password);
     }

@@ -38,7 +38,7 @@ namespace GSW_Core.Services.Implementations
                 Username = request.Username,
                 Email = request.Email
             };
-
+            
             var account = new Account
             {
                 Username = dto.Username,
