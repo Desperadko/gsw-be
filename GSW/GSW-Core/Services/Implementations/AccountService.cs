@@ -96,8 +96,6 @@ namespace GSW_Core.Services.Implementations
 
             var result = passwordHasher.VerifyHashedPassword(account, account.Password, request.Password);
 
-            var token = jwtService.GenerateToken(account);
-
             switch (result)
             {
                 case PasswordVerificationResult.Failed:
@@ -118,13 +116,13 @@ namespace GSW_Core.Services.Implementations
 
             }
 
+            var token = jwtService.GenerateToken(account);
+
             var dto = new AccountDTO
             {
                 Username = account.Username,
                 Email = account.Email,
             };
-
-            //token aqcuisition
 
             var response = new LoginResponse
             {

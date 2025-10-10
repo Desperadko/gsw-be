@@ -2,6 +2,7 @@
 using GSW_Core.Responses;
 using GSW_Core.Services.Interfaces;
 using GSW_Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GSW.Controllers
@@ -18,7 +19,8 @@ namespace GSW.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Account>> Get([FromBody]string username)
+        [Authorize]
+        public async Task<ActionResult<Account>> Get([FromQuery]string username)
         {
             var result = await accountService.Get(username);
             return Ok(result);

@@ -16,7 +16,7 @@ namespace GSW
             builder.Services.AddJWTAuthentication();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwagger();
             builder.Services.AddServices(builder.Configuration);
             builder.Services.AddValidation();
 
