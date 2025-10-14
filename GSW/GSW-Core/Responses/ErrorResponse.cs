@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses
 {
-    public abstract class BaseResponse
+    public class ErrorResponse
     {
-        public string Error { get; set; } = string.Empty;
+        public required string Error { get; set; }
+        public string?[] Details { get; set; } = [];
     }
 }

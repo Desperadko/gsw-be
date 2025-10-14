@@ -4,6 +4,7 @@ using GSW_Core.Requests;
 using GSW_Core.Responses;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Constants;
+using GSW_Core.Utilities.Errors.Exceptions;
 using GSW_Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -32,7 +33,11 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<Account> Get(string username)
         {
-            return await accountRepository.GetByUsername(username);
+            var account = await accountRepository.GetByUsername(username);
+
+            if (account == null) throw new NotFoundException($"Account with username: {username}, does not exist.");
+
+            return account;
         }
 
         public async Task<RegisterResponse> Register(RegisterRequest request)
@@ -52,63 +57,30 @@ namespace GSW_Core.Services.Implementations
 
             account.Password = passwordHasher.HashPassword(account, request.Password);
 
-            var token = jwtService.GenerateToken(account);
-
-            var response = new RegisterResponse
-            {
-                Token = token,
-                Account = dto,
-            };
-
-            if (!account.IsVaild)
-            {
-                response.Error = "Something went wrong with hashing the password.";
-                return response;
-            }
+            if (!account.IsVaild) throw new BadRequestException("Something went wrong when hashing the password.");
 
             var count = await accountRepository.Add(account);
-            if(count <= 0)
-            {
-                response.Error = "Couldn't add account to database.";
-                return response;
-            }
+            if (count <= 0) throw new BadRequestException("Couldn't add account to database.");
 
-            return response;
+            var token = jwtService.GenerateToken(account);
+            
+            return new RegisterResponse
+            {
+                Token = token,
+                Account = dto
+            };
         }
 
         public async Task<LoginResponse> Login(LoginRequest request)
         {
-            var account = await accountRepository.GetByUsername(request.Username);
-
-            if(account == null)
-            {
-                return new LoginResponse
-                {
-                    Token = "",
-                    Account = new AccountDTO
-                    {
-                        Email = "",
-                        Username = request.Username,
-                    },
-                    Error = $"No account with username {request.Username} exists."
-                };
-            }
-
+            var account = await accountRepository.GetByUsername(request.Username) ?? throw new NotFoundException($"Username: {request.Username} doesn't exists.");
+            
             var result = passwordHasher.VerifyHashedPassword(account, account.Password, request.Password);
 
             switch (result)
             {
                 case PasswordVerificationResult.Failed:
-                    return new LoginResponse
-                    {
-                        Token = "",
-                        Account = new AccountDTO
-                        {
-                            Email = "",
-                            Username = request.Username,
-                        },
-                        Error = "Password doesn't exist."
-                    };
+                    throw new NotFoundException("Invalid password.");
                 case PasswordVerificationResult.SuccessRehashNeeded:
                     account.Password = passwordHasher.HashPassword(account, request.Password);
                     await accountRepository.SaveChanges();

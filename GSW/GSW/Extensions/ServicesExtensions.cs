@@ -4,6 +4,7 @@ using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Implementations;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Constants;
+using GSW_Core.Utilities.Errors;
 using GSW_Core.Validators;
 using GSW_Data;
 using GSW_Data.Models;
@@ -124,6 +125,16 @@ namespace GSW.Extensions
                 configuration.EnableFormBindingSourceAutomaticValidation = true;
                 configuration.EnablePathBindingSourceAutomaticValidation = true;
             });
+            return services;
+        }
+
+        public static IServiceCollection AddExceptionFilter(this IServiceCollection services)
+        {
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ExceptionFilter>();
+            });
+
             return services;
         }
     }
