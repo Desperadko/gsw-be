@@ -19,6 +19,7 @@ namespace GSW
             builder.Services.AddSwagger();
             builder.Services.AddServices(builder.Configuration);
             builder.Services.AddValidation();
+            builder.Services.AddExceptionFilter();
 
             var app = builder.Build();
 

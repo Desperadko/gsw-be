@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses
 {
-    public class LoginResponse : BaseResponse
+    public class LoginResponse
     {
         public required string Token { get; init; }
         public required AccountDTO Account { get; init; }
