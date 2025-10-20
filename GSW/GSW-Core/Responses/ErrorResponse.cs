@@ -8,7 +8,7 @@ namespace GSW_Core.Responses
 {
     public class ErrorResponse
     {
-        public required string Error { get; set; }
+        public required string Message { get; set; }
         public string?[] Details { get; set; } = [];
     }
 }

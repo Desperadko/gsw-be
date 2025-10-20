@@ -104,10 +104,8 @@ namespace GSW.Extensions
 
             services.AddDbContext<GSWDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddScoped<ITestRepository, TestRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
 
-            services.AddScoped<ITestService, TestService>();
             services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IJwtService, JwtService>();

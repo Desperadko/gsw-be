@@ -32,7 +32,7 @@ namespace GSW_Core.Utilities.Errors
 
             var errorResponse = new ErrorResponse
             {
-                Error = context.Exception.Message
+                Message = context.Exception.Message
             };
 
             if (environment.IsDevelopment())
@@ -45,7 +45,7 @@ namespace GSW_Core.Utilities.Errors
                 UnauthorizedException => new UnauthorizedObjectResult(errorResponse),
                 NotFoundException => new NotFoundObjectResult(errorResponse),
                 BadRequestException => new BadRequestObjectResult(errorResponse),
-                _ => new ObjectResult(new ErrorResponse { Error = "An unexpected error occurred." })
+                _ => new ObjectResult(new ErrorResponse { Message = "An unexpected error occurred." })
                 {
                     StatusCode = 500
                 }

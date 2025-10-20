@@ -25,7 +25,7 @@ namespace GSW_Core.Services.Implementations
             jwtAudience = Environment.GetEnvironmentVariable(EnvironmentVariableConstants.JWT_AUDIENCE) ?? throw new InvalidOperationException("JWT Audience not set.");
         }
 
-        public string GenerateToken(Account account)
+        public string GenerateAccessToken(Account account)
         {
             var claims = new List<Claim>
             {
@@ -47,6 +47,11 @@ namespace GSW_Core.Services.Implementations
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public string GenerateRefreshToken(Account account)
+        {
+            throw new NotImplementedException();
         }
     }
 }

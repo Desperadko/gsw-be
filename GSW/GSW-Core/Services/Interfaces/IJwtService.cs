@@ -9,6 +9,7 @@ namespace GSW_Core.Services.Interfaces
 {
     public interface IJwtService
     {
-        string GenerateToken(Account account);
+        string GenerateAccessToken(Account account);
+        string GenerateRefreshToken(Account account);
     }
 }

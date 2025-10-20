@@ -33,6 +33,8 @@ namespace GSW_Data.Models
         [MaxLength(AccountConstants.ROLE_MAX_LENGTH)]
         public required string Role { get; set; } = "User";
 
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
         [NotMapped]
         public bool IsVaild => !string.IsNullOrEmpty(Password);
     }

@@ -1,7 +1,7 @@
-﻿using GSW_Core.Requests;
+﻿using GSW_Core.DTOs.Account;
+using GSW_Core.Requests;
 using GSW_Core.Responses;
 using GSW_Core.Services.Interfaces;
-using GSW_Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +20,7 @@ namespace GSW.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<Account>> Get([FromQuery]string username)
+        public async Task<ActionResult<AccountDTO>> Get([FromQuery]string username)
         {
             var result = await accountService.Get(username);
             return Ok(result);
