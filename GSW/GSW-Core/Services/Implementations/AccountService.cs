@@ -19,7 +19,6 @@ namespace GSW_Core.Services.Implementations
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository accountRepository;
-        private readonly IJwtService jwtService;
         private readonly IPasswordHasher<Account> passwordHasher;
 
         public AccountService(
@@ -28,7 +27,6 @@ namespace GSW_Core.Services.Implementations
             IPasswordHasher<Account> passwordHasher)
         {
             this.accountRepository = accountRepository;
-            this.jwtService = jwtService;
             this.passwordHasher = passwordHasher;
         }
 
@@ -55,7 +53,7 @@ namespace GSW_Core.Services.Implementations
             return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role }; 
         }
 
-        public async Task<RegisterResponse> Register(RegisterRequest request)
+        public async Task<(int accountId, AccountDTO accountDTO)> Register(RegisterRequest request)
         {
             var account = new Account
             {
@@ -78,16 +76,10 @@ namespace GSW_Core.Services.Implementations
             var count = await accountRepository.Add(account);
             if (count <= 0) throw new BadRequestException("Couldn't add account to database.");
 
-            var token = jwtService.GenerateAccessToken(account);
-            
-            return new RegisterResponse
-            {
-                Token = token,
-                Account = dto
-            };
+            return (account.Id, dto);
         }
 
-        public async Task<LoginResponse> Login(LoginRequest request)
+        public async Task<(int accountId, AccountDTO accountDTO)> Login(LoginRequest request)
         {
             var account = await accountRepository.GetByUsername(request.Username) ?? throw new NotFoundException($"Username: {request.Username} doesn't exists.");
             
@@ -104,8 +96,6 @@ namespace GSW_Core.Services.Implementations
 
             }
 
-            var token = jwtService.GenerateAccessToken(account);
-
             var dto = new AccountDTO
             {
                 Username = account.Username,
@@ -113,13 +103,7 @@ namespace GSW_Core.Services.Implementations
                 Role = account.Role
             };
 
-            var response = new LoginResponse
-            {
-                Token = token,
-                Account = dto,
-            };
-
-            return response;
+            return (account.Id, dto);
         }
     }
 }

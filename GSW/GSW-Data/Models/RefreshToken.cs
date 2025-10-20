@@ -23,12 +23,12 @@ namespace GSW_Data.Models
         [MaxLength(RefreshTokenConstants.TOKEN_MAX_LENGTH)]
         public required string Token { get; set; }
 
-        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Required(ErrorMessage = "ExpiresAt time required")]
         public required DateTime ExpiresAt { get; set; }
 
-        public required bool IsRevoked { get; set; } = false;
+        public bool IsRevoked { get; set; } = false;
 
         [ForeignKey(nameof(AccountId))]
         public Account? Account { get; set; }
