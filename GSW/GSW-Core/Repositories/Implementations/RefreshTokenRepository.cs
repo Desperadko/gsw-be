@@ -32,7 +32,16 @@ namespace GSW_Core.Repositories.Implementations
             return await dbContext.RefreshTokens.AnyAsync(
                 rt => rt.Token == token
                 && !rt.IsRevoked
-                && !rt.IsExpired);
+                && rt.ExpiresAt > DateTime.UtcNow);
+        }
+
+        public async Task<bool> IsValid(int accountId)
+        {
+            return await dbContext.RefreshTokens
+                .Where(rt => rt.AccountId == accountId)
+                .OrderByDescending(rt => rt.CreatedAt)
+                .Select(rt => !rt.IsRevoked && rt.ExpiresAt > DateTime.UtcNow)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<RefreshToken?> Get(string token)

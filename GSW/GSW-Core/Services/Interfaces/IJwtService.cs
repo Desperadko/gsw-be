@@ -13,6 +13,6 @@ namespace GSW_Core.Services.Interfaces
     {
         string GenerateAccessToken(int accountId, AccountDTO accountDTO);
         string GenerateRefreshToken(int accountId);
-        ClaimsPrincipal ValidateRefreshTokenStructure(string token);
+        ClaimsPrincipal ValidateAccessTokenStructure(string token);
     }
 }

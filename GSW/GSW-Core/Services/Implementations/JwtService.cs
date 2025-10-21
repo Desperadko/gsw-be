@@ -72,7 +72,7 @@ namespace GSW_Core.Services.Implementations
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public ClaimsPrincipal ValidateRefreshTokenStructure(string token)
+        public ClaimsPrincipal ValidateAccessTokenStructure(string token)
         {
             try
             {
@@ -86,8 +86,7 @@ namespace GSW_Core.Services.Implementations
                     ValidIssuer = jwtIssuer,
                     ValidateAudience = true,
                     ValidAudience = jwtAudience,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    ValidateLifetime = false,
                 };
 
                 var principal = tokenHandler.ValidateToken(token, parameters, out _) ?? throw new UnauthorizedException($"Invalid token: '{token}'");

@@ -105,8 +105,10 @@ namespace GSW.Extensions
             services.AddDbContext<GSWDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 
             services.AddScoped<IJwtService, JwtService>();
 

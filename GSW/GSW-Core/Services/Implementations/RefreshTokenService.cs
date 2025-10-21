@@ -41,7 +41,18 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<bool> Validate(string token)
         {
-            return await refreshTokenRepository.IsValid(token);
+            var isValid = await refreshTokenRepository.IsValid(token);
+            if (!isValid) throw new UnauthorizedException("Refresh token is not valid.");
+
+            return isValid;
+        }
+
+        public async Task<bool> Validate(int accountId)
+        {
+            var isValid = await refreshTokenRepository.IsValid(accountId);
+            if (!isValid) throw new UnauthorizedException("Last refresh token of this account is not valid.");
+            
+            return isValid;
         }
 
         public async Task Revoke(string token)

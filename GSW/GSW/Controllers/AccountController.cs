@@ -64,14 +64,14 @@ namespace GSW.Controllers
         [HttpPost("refresh")]
         public async Task<ActionResult<RefreshResponse>> Refresh([FromBody]RefreshRequest request)
         {
-            //validate if same structure
-            var principal = jwtService.ValidateRefreshTokenStructure(request.Token);
-
-            //validate if not revoked or expired
-            await refreshTokenService.Validate(request.Token);
+            //validate if access token uses same structure
+            var principal = jwtService.ValidateAccessTokenStructure(request.Token);
 
             if(int.TryParse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int accountId))
             {
+                //validate if last refresh token is revoked or expired
+                await refreshTokenService.Validate(accountId);
+
                 var dto = await accountService.Get(accountId);
 
                 var token = jwtService.GenerateAccessToken(accountId, dto);
