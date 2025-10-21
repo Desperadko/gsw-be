@@ -51,9 +51,9 @@ namespace GSW_Core.Repositories.Implementations
             return await dbContext.Accounts.AnyAsync(a => a.Email == email);
         }
 
-        public async Task SaveChanges()
+        public async Task<int> SaveChanges()
         {
-            await dbContext.SaveChangesAsync();
+            return await dbContext.SaveChangesAsync();
         }
     }
 }

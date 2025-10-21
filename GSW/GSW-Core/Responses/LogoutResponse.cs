@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses
 {
-    public class ErrorResponse
+    public class LogoutResponse
     {
-        public required string Message { get; set; }
-        public string?[] Details { get; set; } = [];
+        public required string Message { get; init; }
     }
 }

@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSW_Core.DTOs.Account
+namespace GSW_Core.Requests
 {
-    public class AccountDTO
+    public class UpdateRoleRequest
     {
-        public required string Username { get; init; }
-        public required string Email { get; init; }
         public required string Role { get; init; }
     }
 }

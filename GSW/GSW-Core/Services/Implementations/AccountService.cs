@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,6 @@ namespace GSW_Core.Services.Implementations
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository accountRepository;
-        private readonly IJwtService jwtService;
         private readonly IPasswordHasher<Account> passwordHasher;
 
         public AccountService(
@@ -27,32 +27,55 @@ namespace GSW_Core.Services.Implementations
             IPasswordHasher<Account> passwordHasher)
         {
             this.accountRepository = accountRepository;
-            this.jwtService = jwtService;
             this.passwordHasher = passwordHasher;
         }
 
-        public async Task<Account> Get(string username)
+        public AccountDTO GetCurrent(IEnumerable<Claim> claims)
+        {
+            var usernameClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name) ?? throw new BadRequestException("Invalid claims. No username set.");
+            var emailClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) ?? throw new BadRequestException("Invalid claims. No email set.");
+            var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role) ?? throw new BadRequestException("Invalid claims. No role set.");
+
+            return new AccountDTO
+            {
+                Username = usernameClaim.Value,
+                Email = emailClaim.Value,
+                Role = roleClaim.Value
+            };
+        }
+
+        public async Task<AccountDTO> Get(string username)
         {
             var account = await accountRepository.GetByUsername(username);
 
             if (account == null) throw new NotFoundException($"Account with username: {username}, does not exist.");
 
-            return account;
+            return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role }; 
         }
 
-        public async Task<RegisterResponse> Register(RegisterRequest request)
+        public async Task<AccountDTO> Get(int id)
         {
-            var dto = new AccountDTO()
-            {
-                Username = request.Username,
-                Email = request.Email
-            };
-            
+            var account = await accountRepository.GetById(id);
+
+            if (account == null) throw new NotFoundException($"Account with id: '{id}', does not exist.");
+
+            return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role };
+        }
+
+        public async Task<(int accountId, AccountDTO accountDTO)> Register(RegisterRequest request)
+        {
             var account = new Account
             {
-                Username = dto.Username,
-                Email = dto.Email,
+                Username = request.Username,
+                Email = request.Email,
                 Role = RoleConstants.User
+            };
+
+            var dto = new AccountDTO()
+            {
+                Username = account.Username,
+                Email = account.Email,
+                Role = account.Role
             };
 
             account.Password = passwordHasher.HashPassword(account, request.Password);
@@ -62,16 +85,10 @@ namespace GSW_Core.Services.Implementations
             var count = await accountRepository.Add(account);
             if (count <= 0) throw new BadRequestException("Couldn't add account to database.");
 
-            var token = jwtService.GenerateToken(account);
-            
-            return new RegisterResponse
-            {
-                Token = token,
-                Account = dto
-            };
+            return (account.Id, dto);
         }
 
-        public async Task<LoginResponse> Login(LoginRequest request)
+        public async Task<(int accountId, AccountDTO accountDTO)> Login(LoginRequest request)
         {
             var account = await accountRepository.GetByUsername(request.Username) ?? throw new NotFoundException($"Username: {request.Username} doesn't exists.");
             
@@ -88,21 +105,26 @@ namespace GSW_Core.Services.Implementations
 
             }
 
-            var token = jwtService.GenerateToken(account);
-
             var dto = new AccountDTO
             {
                 Username = account.Username,
                 Email = account.Email,
+                Role = account.Role
             };
 
-            var response = new LoginResponse
-            {
-                Token = token,
-                Account = dto,
-            };
+            return (account.Id, dto);
+        }
 
-            return response;
+        public async Task<AccountDTO> UpdateRole(int id, UpdateRoleRequest request)
+        {
+            var account = await accountRepository.GetById(id) ?? throw new NotFoundException($"Account with id: '{id}' doesn't exist.");
+
+            account.Role = request.Role;
+
+            var count = await accountRepository.SaveChanges();
+            if (count <= 0) throw new BadRequestException($"Couldn't update role to account with username: '{account.Username}'");
+
+            return new AccountDTO { Username = account.Username, Email =  account.Email, Role = account.Role };
         }
     }
 }

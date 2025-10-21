@@ -18,6 +18,6 @@ namespace GSW_Core.Repositories.Interfaces
         Task<bool> UsernameExists(string username);
         Task<bool> EmailExists(string email);
 
-        Task SaveChanges();
+        Task<int> SaveChanges();
     }
 }
