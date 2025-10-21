@@ -49,6 +49,14 @@ namespace GSW_Core.Repositories.Implementations
             return await dbContext.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == token);
         }
 
+        public async Task<RefreshToken?> GetLast(int accountId)
+        {
+            return await dbContext.RefreshTokens
+                .Where(rt => rt.AccountId == accountId)
+                .OrderByDescending(rt => rt.CreatedAt)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<RefreshToken>?> GetAllByAccountId(int accountId)
         {
             return await dbContext.RefreshTokens

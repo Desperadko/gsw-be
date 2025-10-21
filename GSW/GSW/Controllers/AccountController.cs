@@ -67,10 +67,10 @@ namespace GSW.Controllers
             //validate if access token uses same structure
             var principal = jwtService.ValidateAccessTokenStructure(request.Token);
 
-            if(int.TryParse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int accountId))
+            if(int.TryParse(principal.FindFirstValue(ClaimTypes.NameIdentifier), out int accountId))
             {
                 //validate if last refresh token is revoked or expired
-                await refreshTokenService.Validate(accountId);
+                await refreshTokenService.ValidateLast(accountId);
 
                 var dto = await accountService.Get(accountId);
 
@@ -84,11 +84,16 @@ namespace GSW.Controllers
 
         [Authorize]
         [HttpPost("logout")]
-        public async Task<ActionResult<LogoutResponse>> Logout([FromBody]LogoutRequest request)
+        public async Task<ActionResult<LogoutResponse>> Logout()
         {
-            await refreshTokenService.Revoke(request.Token);
+            if(int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int accountId))
+            {
+                await refreshTokenService.RevokeLast(accountId);
 
-            return Ok(new LogoutResponse { Message = "Logged out successfully" });
+                return Ok(new LogoutResponse { Message = "Logged out successfully" });
+            }
+
+            return Unauthorized(new LogoutResponse { Message = "Couldn't logout"});
         }
 
         [Authorize(Roles = RoleConstants.Admin)]

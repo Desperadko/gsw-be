@@ -13,6 +13,7 @@ namespace GSW_Core.Repositories.Interfaces
         Task<bool> IsValid(string token);
         Task<bool> IsValid(int accountId);
         Task<RefreshToken?> Get(string token);
+        Task<RefreshToken?> GetLast(int accountId);
         Task<IEnumerable<RefreshToken>?> GetAllByAccountId(int accountId);
         Task<int> Save();
     }

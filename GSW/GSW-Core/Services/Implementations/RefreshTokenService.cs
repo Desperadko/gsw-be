@@ -47,7 +47,7 @@ namespace GSW_Core.Services.Implementations
             return isValid;
         }
 
-        public async Task<bool> Validate(int accountId)
+        public async Task<bool> ValidateLast(int accountId)
         {
             var isValid = await refreshTokenRepository.IsValid(accountId);
             if (!isValid) throw new UnauthorizedException("Last refresh token of this account is not valid.");
@@ -58,6 +58,16 @@ namespace GSW_Core.Services.Implementations
         public async Task Revoke(string token)
         {
             var refreshToken = await refreshTokenRepository.Get(token) ?? throw new NotFoundException("Refresh token not found.");
+
+            refreshToken.IsRevoked = true;
+
+            var count = await refreshTokenRepository.Save();
+            if (count <= 0) throw new BadRequestException("Couldn't revoke token.");
+        }
+
+        public async Task RevokeLast(int accountId)
+        {
+            var refreshToken = await refreshTokenRepository.GetLast(accountId) ?? throw new NotFoundException($"No refresh token found for account with id: '{accountId}'");
 
             refreshToken.IsRevoked = true;
 

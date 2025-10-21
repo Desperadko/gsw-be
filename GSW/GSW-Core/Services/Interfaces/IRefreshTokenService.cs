@@ -10,8 +10,9 @@ namespace GSW_Core.Services.Interfaces
     {
         Task<string> Add(int accountId, string token, DateTime? expiresAt = null);
         Task<bool> Validate(string token);
-        Task<bool> Validate(int accountId);
+        Task<bool> ValidateLast(int accountId);
         Task Revoke(string token);
+        Task RevokeLast(int accountId);
         Task RevokeAll(int accountId);
     }
 }
