@@ -5,6 +5,7 @@ using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GSW.Controllers
 {
@@ -63,21 +64,42 @@ namespace GSW.Controllers
         [HttpPost("refresh")]
         public async Task<ActionResult<RefreshResponse>> Refresh([FromBody]RefreshRequest request)
         {
-            throw new NotImplementedException();
+            //validate if same structure
+            var principal = jwtService.ValidateRefreshTokenStructure(request.Token);
+
+            //validate if not revoked or expired
+            await refreshTokenService.Validate(request.Token);
+
+            if(int.TryParse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int accountId))
+            {
+                var dto = await accountService.Get(accountId);
+
+                var token = jwtService.GenerateAccessToken(accountId, dto);
+
+                return Ok(new RefreshResponse { AccessToken = token });
+            }
+
+            return Unauthorized(request);
         }
 
         [Authorize]
         [HttpPost("logout")]
         public async Task<ActionResult<LogoutResponse>> Logout([FromBody]LogoutRequest request)
         {
-            throw new NotImplementedException();
+            await refreshTokenService.Revoke(request.Token);
+
+            return Ok(new LogoutResponse { Message = "Logged out successfully" });
         }
 
         [Authorize(Roles = RoleConstants.Admin)]
         [HttpPut("{id}/role")]
         public async Task<ActionResult<UpdateRoleReponse>> UpdateRole(int id, [FromBody]UpdateRoleRequest request)
         {
-            throw new NotImplementedException();
+            await refreshTokenService.RevokeAll(id);
+
+            var account = await accountService.UpdateRole(id, request);
+
+            return Ok(new UpdateRoleReponse { Account = account });
         }
     }
 }

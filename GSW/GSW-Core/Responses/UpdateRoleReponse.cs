@@ -9,6 +9,6 @@ namespace GSW_Core.Responses
 {
     public class UpdateRoleReponse
     {
-        public required AccountDTO account;
+        public required AccountDTO Account { get; init; }
     }
 }

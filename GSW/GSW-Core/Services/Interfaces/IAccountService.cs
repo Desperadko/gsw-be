@@ -15,7 +15,9 @@ namespace GSW_Core.Services.Interfaces
     {
         AccountDTO GetCurrent(IEnumerable<Claim> claims);
         Task<AccountDTO> Get(string username);
+        Task<AccountDTO> Get(int id);
         Task<(int accountId, AccountDTO accountDTO)> Register(RegisterRequest request);
         Task<(int accountId, AccountDTO accountDTO)> Login(LoginRequest request);
+        Task<AccountDTO> UpdateRole(int id, UpdateRoleRequest request);
     }
 }

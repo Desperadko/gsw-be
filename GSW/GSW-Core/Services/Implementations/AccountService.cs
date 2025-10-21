@@ -53,6 +53,15 @@ namespace GSW_Core.Services.Implementations
             return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role }; 
         }
 
+        public async Task<AccountDTO> Get(int id)
+        {
+            var account = await accountRepository.GetById(id);
+
+            if (account == null) throw new NotFoundException($"Account with id: '{id}', does not exist.");
+
+            return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role };
+        }
+
         public async Task<(int accountId, AccountDTO accountDTO)> Register(RegisterRequest request)
         {
             var account = new Account
@@ -104,6 +113,18 @@ namespace GSW_Core.Services.Implementations
             };
 
             return (account.Id, dto);
+        }
+
+        public async Task<AccountDTO> UpdateRole(int id, UpdateRoleRequest request)
+        {
+            var account = await accountRepository.GetById(id) ?? throw new NotFoundException($"Account with id: '{id}' doesn't exist.");
+
+            account.Role = request.Role;
+
+            var count = await accountRepository.SaveChanges();
+            if (count <= 0) throw new BadRequestException($"Couldn't update role to account with username: '{account.Username}'");
+
+            return new AccountDTO { Username = account.Username, Email =  account.Email, Role = account.Role };
         }
     }
 }
