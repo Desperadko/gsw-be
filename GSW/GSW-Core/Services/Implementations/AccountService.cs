@@ -1,10 +1,12 @@
-﻿using GSW_Core.DTOs.Account;
+﻿using Azure.Core;
+using GSW_Core.DTOs.Account;
 using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Requests;
 using GSW_Core.Responses;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Constants;
 using GSW_Core.Utilities.Errors.Exceptions;
+using GSW_Data.Constants;
 using GSW_Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -23,7 +25,6 @@ namespace GSW_Core.Services.Implementations
 
         public AccountService(
             IAccountRepository accountRepository,
-            IJwtService jwtService,
             IPasswordHasher<Account> passwordHasher)
         {
             this.accountRepository = accountRepository;
@@ -48,7 +49,7 @@ namespace GSW_Core.Services.Implementations
         {
             var account = await accountRepository.GetByUsername(username);
 
-            if (account == null) throw new NotFoundException($"Account with username: {username}, does not exist.");
+            if (account == null) throw new NotFoundException(ErrorFieldConstants.USERNAME, $"Account with username: {username}, does not exist.");
 
             return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role }; 
         }
@@ -57,7 +58,7 @@ namespace GSW_Core.Services.Implementations
         {
             var account = await accountRepository.GetById(id);
 
-            if (account == null) throw new NotFoundException($"Account with id: '{id}', does not exist.");
+            if (account == null) throw new NotFoundException(ErrorFieldConstants.ID, $"Account with id: '{id}', does not exist.");
 
             return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role };
         }
@@ -90,19 +91,13 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<(int accountId, AccountDTO accountDTO)> Login(LoginRequest request)
         {
-            var account = await accountRepository.GetByUsername(request.Username) ?? throw new NotFoundException($"Username: {request.Username} doesn't exists.");
+            var account = await accountRepository.GetByUsername(request.Username)
+                ?? throw new NotFoundException(ErrorFieldConstants.USERNAME, $"Username: {request.Username} doesn't exists.");
             
-            var result = passwordHasher.VerifyHashedPassword(account, account.Password, request.Password);
-
-            switch (result)
+            var isVerified = await VerifyPassword(account, request.Password);
+            if (!isVerified)
             {
-                case PasswordVerificationResult.Failed:
-                    throw new NotFoundException("Invalid password.");
-                case PasswordVerificationResult.SuccessRehashNeeded:
-                    account.Password = passwordHasher.HashPassword(account, request.Password);
-                    await accountRepository.SaveChanges();
-                    break;
-
+                throw new UnauthorizedException(ErrorFieldConstants.PASSWORD, "Invalid password.");
             }
 
             var dto = new AccountDTO
@@ -117,7 +112,8 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<AccountDTO> UpdateRole(int id, UpdateRoleRequest request)
         {
-            var account = await accountRepository.GetById(id) ?? throw new NotFoundException($"Account with id: '{id}' doesn't exist.");
+            var account = await accountRepository.GetById(id)
+                ?? throw new NotFoundException(ErrorFieldConstants.ID, $"Account with id: '{id}' doesn't exist.");
 
             account.Role = request.Role;
 
@@ -125,6 +121,23 @@ namespace GSW_Core.Services.Implementations
             if (count <= 0) throw new BadRequestException($"Couldn't update role to account with username: '{account.Username}'");
 
             return new AccountDTO { Username = account.Username, Email =  account.Email, Role = account.Role };
+        }
+
+        public async Task<bool> VerifyPassword(Account account, string providedPassword)
+        {
+            var result = passwordHasher.VerifyHashedPassword(account, account.Password, providedPassword);
+
+            switch (result)
+            {
+                case PasswordVerificationResult.Failed:
+                    return false;
+                case PasswordVerificationResult.SuccessRehashNeeded:
+                    account.Password = passwordHasher.HashPassword(account, providedPassword);
+                    await accountRepository.SaveChanges();
+                    break;
+            }
+
+            return true;
         }
     }
 }

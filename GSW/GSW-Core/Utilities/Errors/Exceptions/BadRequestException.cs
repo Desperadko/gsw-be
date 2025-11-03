@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Utilities.Errors.Exceptions
 {
-    public class BadRequestException : Exception
+    public class BadRequestException : FieldedException
     {
         public BadRequestException(string message) : base(message) { }
+        public BadRequestException(string field, string message) : base(field, message) { }
     }
 }

@@ -8,6 +8,6 @@ namespace GSW_Core.Responses
 {
     public class RefreshResponse
     {
-        public required string AccessToken { get; init; }
+        public required string Token { get; init; }
     }
 }

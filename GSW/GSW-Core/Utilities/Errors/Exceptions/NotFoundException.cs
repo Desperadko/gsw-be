@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Utilities.Errors.Exceptions
 {
-    public class NotFoundException : Exception
+    public class NotFoundException : FieldedException
     {
         public NotFoundException(string message) : base(message) { }
+
+        public NotFoundException(string field, string message) : base(field, message) { }
     }
 }

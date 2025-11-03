@@ -35,6 +35,11 @@ namespace GSW_Core.Utilities.Errors
                 Message = context.Exception.Message
             };
 
+            if(context.Exception is FieldedException exception && !string.IsNullOrEmpty(exception.Field))
+            {
+                errorResponse.Field = exception.Field;
+            }
+
             if (environment.IsDevelopment())
             {
                 errorResponse.Details = [context.Exception.StackTrace]; 
