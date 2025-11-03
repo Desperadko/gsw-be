@@ -28,10 +28,18 @@ namespace GSW.Controllers
         }
 
         [Authorize]
-        [HttpGet]
-        public async Task<ActionResult<AccountDTO>> Get([FromQuery]string username)
+        [HttpGet("{username}")]
+        public async Task<ActionResult<AccountDTO>> Get(string username)
         {
             var result = await accountService.Get(username);
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult<AccountDTO> GetCurrent()
+        {
+            var result = accountService.GetCurrent(User.Claims);
             return Ok(result);
         }
 
@@ -76,7 +84,7 @@ namespace GSW.Controllers
 
                 var token = jwtService.GenerateAccessToken(accountId, dto);
 
-                return Ok(new RefreshResponse { AccessToken = token });
+                return Ok(new RefreshResponse { Token = token });
             }
 
             return Unauthorized(request);
