@@ -16,6 +16,10 @@ namespace GSW_Core.Validators
             RuleFor(a => a.Username)
                 .NotEmpty()
                 .WithMessage("Username should not be empty.");
+
+            RuleFor(a => a.Password)
+                .NotEmpty()
+                .WithMessage("Password should not be empty.");
         }
     }
 }

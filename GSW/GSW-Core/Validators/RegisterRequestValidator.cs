@@ -20,7 +20,11 @@ namespace GSW_Core.Validators
 
             RuleFor(a => a.Email)
                 .NotEmpty()
-                .WithMessage("Email either already exists or is left empty.");
+                .WithMessage("Email should not be empty.");
+
+            RuleFor(a => a.Password)
+                .NotEmpty()
+                .WithMessage("Password should not be empty.");
         }
     }
 }
