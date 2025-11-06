@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSW_Core.Requests
+namespace GSW_Core.DTOs.Developer
 {
-    public class UpdateRoleRequest
+    public record DeveloperDTO(string Name)
     {
-        public required string Role { get; init; }
     }
 }

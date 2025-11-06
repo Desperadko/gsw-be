@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSW_Core.Responses
+namespace GSW_Core.DTOs.Genre
 {
-    public class LogoutResponse
+    public record GenreDTO(string Name)
     {
-        public required string Message { get; init; }
     }
 }

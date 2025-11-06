@@ -1,7 +1,7 @@
 ﻿using Azure.Core;
 using GSW_Core.DTOs.Account;
 using GSW_Core.Repositories.Interfaces;
-using GSW_Core.Requests;
+using GSW_Core.Requests.Account;
 using GSW_Core.Responses;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Constants;

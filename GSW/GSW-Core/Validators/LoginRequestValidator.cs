@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using GSW_Core.Repositories.Interfaces;
-using GSW_Core.Requests;
+using GSW_Core.Requests.Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSW_Core.Responses
+namespace GSW_Core.Requests.Account
 {
-    public class RefreshResponse
+    public class UpdateRoleRequest
     {
-        public required string Token { get; init; }
+        public required string Role { get; init; }
     }
 }

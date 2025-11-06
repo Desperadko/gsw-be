@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSW_Core.Requests
+namespace GSW_Core.Requests.Account
 {
     public class RegisterRequest
     {
