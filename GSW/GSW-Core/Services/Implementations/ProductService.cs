@@ -1,4 +1,5 @@
-﻿using GSW_Core.Repositories.Interfaces;
+﻿using GSW_Core.DTOs.Product;
+using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,14 @@ namespace GSW_Core.Services.Implementations
             this.productRepository = productRepository;
         }
 
+        public Task<ProductDTO> Add(ProductDTO product)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task<ProductDTO> Get(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

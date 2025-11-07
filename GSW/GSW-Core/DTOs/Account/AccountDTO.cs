@@ -6,10 +6,5 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.DTOs.Account
 {
-    public class AccountDTO
-    {
-        public required string Username { get; init; }
-        public required string Email { get; init; }
-        public required string Role { get; init; }
-    }
+    public record AccountDTO(string Username, string Email, string Role);
 }

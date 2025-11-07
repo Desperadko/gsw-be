@@ -28,7 +28,7 @@ namespace GSW_Data.Models
         public DateTime ReleaseDate { get; set; }
 
         [Required(ErrorMessage = "Price is required")]
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         public virtual ICollection<Genre>? Genres { get; set; }
         public virtual ICollection<Developer>? Developers { get; set; }

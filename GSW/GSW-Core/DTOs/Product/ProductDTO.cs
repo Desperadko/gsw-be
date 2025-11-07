@@ -14,7 +14,7 @@ namespace GSW_Core.DTOs.Product
         string Name,
         string Description,
         DateTime ReleaseDate,
-        int Price,
+        decimal Price,
         ICollection<DeveloperDTO> Developers,
         ICollection<PublisherDTO> Publishers,
         ICollection<GenreDTO> Genres,

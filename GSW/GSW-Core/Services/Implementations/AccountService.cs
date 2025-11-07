@@ -37,12 +37,7 @@ namespace GSW_Core.Services.Implementations
             var emailClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) ?? throw new BadRequestException("Invalid claims. No email set.");
             var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role) ?? throw new BadRequestException("Invalid claims. No role set.");
 
-            return new AccountDTO
-            {
-                Username = usernameClaim.Value,
-                Email = emailClaim.Value,
-                Role = roleClaim.Value
-            };
+            return new AccountDTO(usernameClaim.Value, emailClaim.Value, roleClaim.Value);
         }
 
         public async Task<AccountDTO> Get(string username)
@@ -51,7 +46,7 @@ namespace GSW_Core.Services.Implementations
 
             if (account == null) throw new NotFoundException(ErrorFieldConstants.USERNAME, $"Account with username: {username}, does not exist.");
 
-            return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role }; 
+            return new AccountDTO(account.Username, account.Email, account.Role); 
         }
 
         public async Task<AccountDTO> Get(int id)
@@ -60,7 +55,7 @@ namespace GSW_Core.Services.Implementations
 
             if (account == null) throw new NotFoundException(ErrorFieldConstants.ID, $"Account with id: '{id}', does not exist.");
 
-            return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role };
+            return new AccountDTO(account.Username, account.Email, account.Role);
         }
 
         public async Task<(int accountId, AccountDTO accountDTO)> Register(RegisterRequest request)
@@ -72,12 +67,7 @@ namespace GSW_Core.Services.Implementations
                 Role = RoleConstants.User
             };
 
-            var dto = new AccountDTO()
-            {
-                Username = account.Username,
-                Email = account.Email,
-                Role = account.Role
-            };
+            var dto = new AccountDTO(account.Username, account.Email, account.Role);
 
             account.Password = passwordHasher.HashPassword(account, request.Password);
 
@@ -100,12 +90,7 @@ namespace GSW_Core.Services.Implementations
                 throw new UnauthorizedException(ErrorFieldConstants.PASSWORD, "Invalid password.");
             }
 
-            var dto = new AccountDTO
-            {
-                Username = account.Username,
-                Email = account.Email,
-                Role = account.Role
-            };
+            var dto = new AccountDTO(account.Username, account.Email, account.Role);
 
             return (account.Id, dto);
         }
@@ -120,7 +105,7 @@ namespace GSW_Core.Services.Implementations
             var count = await accountRepository.SaveChanges();
             if (count <= 0) throw new BadRequestException($"Couldn't update role to account with username: '{account.Username}'");
 
-            return new AccountDTO { Username = account.Username, Email =  account.Email, Role = account.Role };
+            return new AccountDTO(account.Username, account.Email, account.Role);
         }
 
         public async Task<bool> VerifyPassword(Account account, string providedPassword)
