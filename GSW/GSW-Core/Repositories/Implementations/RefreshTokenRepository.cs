@@ -64,6 +64,15 @@ namespace GSW_Core.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<RefreshToken>?> GetAllValidByAccountIdAsync(int accountId)
+        {
+            return await dbContext.RefreshTokens
+                .Where(rt => rt.AccountId == accountId
+                    && !rt.IsRevoked
+                    && rt.ExpiresAt > DateTime.UtcNow)
+                .ToListAsync();
+        }
+
         public async Task<int> SaveAsync()
         {
             return await dbContext.SaveChangesAsync();

@@ -73,15 +73,17 @@ namespace GSW_Core.Services.Implementations
 
         public async Task RevokeAllAsync(int accountId)
         {
-            var refreshTokens = await refreshTokenRepository.GetAllByAccountIdAsync(accountId) ?? throw new NotFoundException("No Refresh Tokens found for account.");
+            var unrevokedTokens = await refreshTokenRepository.GetAllValidByAccountIdAsync(accountId) ?? throw new NotFoundException("No Refresh Tokens found for account.");
 
-            foreach(var token in refreshTokens)
+            if (!unrevokedTokens.Any()) return;
+
+            foreach(var token in unrevokedTokens)
             {
                 token.IsRevoked = true;
             }
 
             var count = await refreshTokenRepository.SaveAsync();
-            if (count < refreshTokens.Count()) throw new BadRequestException($"Couldn't revoke Refresh Tokens. {count} out of {refreshTokens.Count()} revoked.");
+            if (count < unrevokedTokens.Count()) throw new BadRequestException($"Couldn't revoke Refresh Tokens. {count} out of {unrevokedTokens.Count()} revoked.");
         }
     }
 }

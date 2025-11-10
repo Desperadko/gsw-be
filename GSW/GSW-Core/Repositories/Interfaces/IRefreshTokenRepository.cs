@@ -15,6 +15,7 @@ namespace GSW_Core.Repositories.Interfaces
         Task<RefreshToken?> GetAsync(string token);
         Task<RefreshToken?> GetLastAsync(int accountId);
         Task<IEnumerable<RefreshToken>?> GetAllByAccountIdAsync(int accountId);
+        Task<IEnumerable<RefreshToken>?> GetAllValidByAccountIdAsync(int accountId);
         Task<int> SaveAsync();
     }
 }
