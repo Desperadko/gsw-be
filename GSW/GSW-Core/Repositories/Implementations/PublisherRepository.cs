@@ -19,13 +19,20 @@ namespace GSW_Core.Repositories.Implementations
             this.dbContext = dbContext;
         }
 
-        public async Task<int> Add(Publisher publisher)
+        public async Task<int> AddAsync(Publisher publisher)
         {
             await dbContext.Publishers.AddAsync(publisher);
             return await dbContext.SaveChangesAsync();
         }
 
-        public async Task<Publisher?> Get(int id)
+        public async Task<IEnumerable<Publisher>?> GetAllAsync()
+        {
+            return await dbContext.Publishers
+                .OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
+                .ToListAsync();
+        }
+
+        public async Task<Publisher?> GetAsync(int id)
         {
             return await dbContext.Publishers
                 .Include(p => p.Products)

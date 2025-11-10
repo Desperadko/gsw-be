@@ -9,7 +9,8 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IGenreRepository
     {
-        Task<Genre?> Get(int id);
-        Task<int> Add(Genre genre);
+        Task<Genre?> GetAsync(int id);
+        Task<IEnumerable<Genre>?> GetAllAsync();
+        Task<int> AddAsync(Genre genre);
     }
 }

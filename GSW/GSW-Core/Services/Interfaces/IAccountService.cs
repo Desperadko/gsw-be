@@ -14,10 +14,10 @@ namespace GSW_Core.Services.Interfaces
     public interface IAccountService
     {
         AccountDTO GetCurrent(IEnumerable<Claim> claims);
-        Task<AccountDTO> Get(string username);
-        Task<AccountDTO> Get(int id);
-        Task<(int accountId, AccountDTO accountDTO)> Register(RegisterRequest request);
-        Task<(int accountId, AccountDTO accountDTO)> Login(LoginRequest request);
-        Task<AccountDTO> UpdateRole(int id, UpdateRoleRequest request);
+        Task<AccountDTO> GetAsync(string username);
+        Task<AccountDTO> GetAsync(int id);
+        Task<(int accountId, AccountDTO accountDTO)> RegisterAsync(RegisterRequest request);
+        Task<(int accountId, AccountDTO accountDTO)> LoginAsync(LoginRequest request);
+        Task<AccountDTO> UpdateRoleAsync(int id, UpdateRoleRequest request);
     }
 }

@@ -9,7 +9,8 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IPlatformRepository
     {
-        Task<Platform?> Get(int id);
-        Task<int> Add(Platform platform);
+        Task<Platform?> GetAsync(int id);
+        Task<IEnumerable<Platform>?> GetAllAsync();
+        Task<int> AddAsync(Platform platform);
     }
 }

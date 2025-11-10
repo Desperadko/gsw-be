@@ -19,13 +19,20 @@ namespace GSW_Core.Repositories.Implementations
             this.dbContext = dbContext;
         }
 
-        public async Task<int> Add(Developer developer)
+        public async Task<int> AddAsync(Developer developer)
         {
             await dbContext.Developers.AddAsync(developer);
             return await dbContext.SaveChangesAsync();
         }
 
-        public async Task<Developer?> Get(int id)
+        public async Task<IEnumerable<Developer>?> GetAllAsync()
+        {
+            return await dbContext.Developers
+                .OrderBy(developer => developer.Name, StringComparer.OrdinalIgnoreCase)
+                .ToListAsync();
+        }
+
+        public async Task<Developer?> GetAsync(int id)
         {
             return await dbContext.Developers
                 .Include(d => d.Products)

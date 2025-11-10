@@ -9,6 +9,6 @@ namespace GSW_Core.Services.Interfaces
 {
     public interface IPublisherService
     {
-        Task<ICollection<PublisherDTO>> GetAllAsync();
+        Task<IEnumerable<PublisherDTO>> GetAllAsync();
     }
 }

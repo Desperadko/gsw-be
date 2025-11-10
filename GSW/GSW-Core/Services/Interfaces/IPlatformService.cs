@@ -9,6 +9,6 @@ namespace GSW_Core.Services.Interfaces
 {
     public interface IPlatformService
     {
-        Task<ICollection<PlatformDTO>> GetAllAsync();
+        Task<IEnumerable<PlatformDTO>> GetAllAsync();
     }
 }

@@ -19,13 +19,20 @@ namespace GSW_Core.Repositories.Implementations
             this.dbContext = dbContext;
         }
 
-        public async Task<int> Add(Platform platform)
+        public async Task<int> AddAsync(Platform platform)
         {
             await dbContext.Platforms.AddAsync(platform);
             return await dbContext.SaveChangesAsync();
         }
 
-        public async Task<Platform?> Get(int id)
+        public async Task<IEnumerable<Platform>?> GetAllAsync()
+        {
+            return await dbContext.Platforms
+                .OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
+                .ToListAsync();
+        }
+
+        public async Task<Platform?> GetAsync(int id)
         {
             return await dbContext.Platforms
                 .Include(p => p.Products)

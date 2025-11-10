@@ -9,6 +9,6 @@ namespace GSW_Core.Services.Interfaces
 {
     public interface IGenreService
     {
-        Task<ICollection<GenreDTO>> GetAllAsync();
+        Task<IEnumerable<GenreDTO>> GetAllAsync();
     }
 }

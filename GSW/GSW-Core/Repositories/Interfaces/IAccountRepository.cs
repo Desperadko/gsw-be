@@ -10,14 +10,14 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IAccountRepository
     {
-        Task<Account?> GetById(int id);
-        Task<Account?> GetByUsername(string username);
-        Task<int> Add(Account account);
+        Task<Account?> GetByIdAsync(int id);
+        Task<Account?> GetByUsernameAsync(string username);
+        Task<int> AddAsync(Account account);
 
-        Task<bool> IdExists(int id);
-        Task<bool> UsernameExists(string username);
-        Task<bool> EmailExists(string email);
+        Task<bool> IdExistsAsync(int id);
+        Task<bool> UsernameExistsAsync(string username);
+        Task<bool> EmailExistsAsync(string email);
 
-        Task<int> SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }

@@ -8,11 +8,11 @@ namespace GSW_Core.Services.Interfaces
 {
     public interface IRefreshTokenService
     {
-        Task<string> Add(int accountId, string token, DateTime? expiresAt = null);
-        Task<bool> Validate(string token);
-        Task<bool> ValidateLast(int accountId);
-        Task Revoke(string token);
-        Task RevokeLast(int accountId);
-        Task RevokeAll(int accountId);
+        Task<string> AddAsync(int accountId, string token, DateTime? expiresAt = null);
+        Task<bool> ValidateAsync(string token);
+        Task<bool> ValidateLastAsync(int accountId);
+        Task RevokeAsync(string token);
+        Task RevokeLastAsync(int accountId);
+        Task RevokeAllAsync(int accountId);
     }
 }

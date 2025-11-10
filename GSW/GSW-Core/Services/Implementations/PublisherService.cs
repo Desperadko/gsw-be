@@ -1,5 +1,7 @@
 ﻿using GSW_Core.DTOs.Publisher;
+using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Interfaces;
+using GSW_Core.Utilities.Errors.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +12,20 @@ namespace GSW_Core.Services.Implementations
 {
     public class PublisherService : IPublisherService
     {
-        public Task<ICollection<PublisherDTO>> GetAllAsync()
+        private readonly IPublisherRepository publisherRepository;
+
+        public PublisherService(IPublisherRepository publisherRepository)
         {
-            throw new NotImplementedException();
+            this.publisherRepository = publisherRepository;
+        }
+
+        public async Task<IEnumerable<PublisherDTO>> GetAllAsync()
+        {
+            var publishers = await publisherRepository.GetAllAsync() ?? throw new NotFoundException("No publishers have been registered");
+
+            return publishers
+                .Select(p => new PublisherDTO(p.Name))
+                .ToList();
         }
     }
 }

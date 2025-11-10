@@ -9,7 +9,7 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        Task<Product?> Get(int id);
-        Task<int> Add(Product product);
+        Task<Product?> GetAsync(int id);
+        Task<int> AddAsync(Product product);
     }
 }

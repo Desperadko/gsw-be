@@ -19,7 +19,7 @@ namespace GSW_Core.Repositories.Implementations
             this.dbContext = dbContext;
         }
 
-        public async Task<int> Add(RefreshToken token)
+        public async Task<int> AddAsync(RefreshToken token)
         {
             await dbContext.RefreshTokens.AddAsync(token);
             var count = await dbContext.SaveChangesAsync();
@@ -27,7 +27,7 @@ namespace GSW_Core.Repositories.Implementations
             return count;
         }
 
-        public async Task<bool> IsValid(string token)
+        public async Task<bool> IsValidAsync(string token)
         {
             return await dbContext.RefreshTokens.AnyAsync(
                 rt => rt.Token == token
@@ -35,7 +35,7 @@ namespace GSW_Core.Repositories.Implementations
                 && rt.ExpiresAt > DateTime.UtcNow);
         }
 
-        public async Task<bool> IsValid(int accountId)
+        public async Task<bool> IsValidAsync(int accountId)
         {
             return await dbContext.RefreshTokens
                 .Where(rt => rt.AccountId == accountId)
@@ -44,12 +44,12 @@ namespace GSW_Core.Repositories.Implementations
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<RefreshToken?> Get(string token)
+        public async Task<RefreshToken?> GetAsync(string token)
         {
             return await dbContext.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == token);
         }
 
-        public async Task<RefreshToken?> GetLast(int accountId)
+        public async Task<RefreshToken?> GetLastAsync(int accountId)
         {
             return await dbContext.RefreshTokens
                 .Where(rt => rt.AccountId == accountId)
@@ -57,14 +57,14 @@ namespace GSW_Core.Repositories.Implementations
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<RefreshToken>?> GetAllByAccountId(int accountId)
+        public async Task<IEnumerable<RefreshToken>?> GetAllByAccountIdAsync(int accountId)
         {
             return await dbContext.RefreshTokens
                 .Where(rt => rt.AccountId == accountId)
                 .ToListAsync();
         }
 
-        public async Task<int> Save()
+        public async Task<int> SaveAsync()
         {
             return await dbContext.SaveChangesAsync();
         }

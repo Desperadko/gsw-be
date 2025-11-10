@@ -9,12 +9,12 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IRefreshTokenRepository
     {
-        Task<int> Add(RefreshToken token);
-        Task<bool> IsValid(string token);
-        Task<bool> IsValid(int accountId);
-        Task<RefreshToken?> Get(string token);
-        Task<RefreshToken?> GetLast(int accountId);
-        Task<IEnumerable<RefreshToken>?> GetAllByAccountId(int accountId);
-        Task<int> Save();
+        Task<int> AddAsync(RefreshToken token);
+        Task<bool> IsValidAsync(string token);
+        Task<bool> IsValidAsync(int accountId);
+        Task<RefreshToken?> GetAsync(string token);
+        Task<RefreshToken?> GetLastAsync(int accountId);
+        Task<IEnumerable<RefreshToken>?> GetAllByAccountIdAsync(int accountId);
+        Task<int> SaveAsync();
     }
 }

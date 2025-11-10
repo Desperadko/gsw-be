@@ -9,7 +9,8 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IPublisherRepository
     {
-        Task<Publisher?> Get(int id);
-        Task<int> Add(Publisher publisher);
+        Task<Publisher?> GetAsync(int id);
+        Task<IEnumerable<Publisher>?> GetAllAsync();
+        Task<int> AddAsync(Publisher publisher);
     }
 }

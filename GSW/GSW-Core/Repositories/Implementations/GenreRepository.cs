@@ -19,13 +19,20 @@ namespace GSW_Core.Repositories.Implementations
             this.dbContext = dbContext;
         }
 
-        public async Task<int> Add(Genre genre)
+        public async Task<int> AddAsync(Genre genre)
         {
             await dbContext.Genres.AddAsync(genre);
             return await dbContext.SaveChangesAsync();
         }
 
-        public async Task<Genre?> Get(int id)
+        public async Task<IEnumerable<Genre>?> GetAllAsync()
+        {
+            return await dbContext.Genres
+                .OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase)
+                .ToListAsync();
+        }
+
+        public async Task<Genre?> GetAsync(int id)
         {
             return await dbContext.Genres
                 .Include(g => g.Products)

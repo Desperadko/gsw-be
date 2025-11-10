@@ -9,6 +9,6 @@ namespace GSW_Core.Services.Interfaces
 {
     public interface IDeveloperService
     {
-        Task<ICollection<DeveloperDTO>> GetAllAsync();
+        Task<IEnumerable<DeveloperDTO>> GetAllAsync();
     }
 }

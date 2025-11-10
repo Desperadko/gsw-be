@@ -19,13 +19,13 @@ namespace GSW_Core.Repositories.Implementations
             this.dbContext = dbContext;
         }
 
-        public async Task<int> Add(Product product)
+        public async Task<int> AddAsync(Product product)
         {
             await dbContext.Products.AddAsync(product);
             return await dbContext.SaveChangesAsync();
         }
 
-        public async Task<Product?> Get(int id)
+        public async Task<Product?> GetAsync(int id)
         {
             return await dbContext.Products
                 .Include(p => p.Developers)
