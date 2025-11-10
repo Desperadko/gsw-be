@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSW_Core.DTOs.Account
+namespace GSW_Core.DTOs
 {
-    public record AccountDTO(string Username, string Email, string Role) : BaseDTO
+    public abstract record BaseDTO
     {
     }
 }

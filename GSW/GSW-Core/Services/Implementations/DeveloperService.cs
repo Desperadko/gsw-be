@@ -24,7 +24,7 @@ namespace GSW_Core.Services.Implementations
             var developers = await developerRepository.GetAllAsync() ?? throw new NotFoundException("No developers have been registered");
 
             return developers
-                .Select(d => new DeveloperDTO(d.Name))
+                .Select(d => new DeveloperDTO(d.Id, d.Name))
                 .ToList();
         }
     }

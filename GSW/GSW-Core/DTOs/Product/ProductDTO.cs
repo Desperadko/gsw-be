@@ -15,10 +15,11 @@ namespace GSW_Core.DTOs.Product
         string Description,
         DateTime ReleaseDate,
         decimal Price,
-        ICollection<DeveloperDTO> Developers,
-        ICollection<PublisherDTO> Publishers,
-        ICollection<GenreDTO> Genres,
-        ICollection<PlatformDTO> Platforms)
+        IEnumerable<DeveloperDTO> Developers,
+        IEnumerable<PublisherDTO> Publishers,
+        IEnumerable<GenreDTO> Genres,
+        IEnumerable<PlatformDTO> Platforms
+        ) : BaseDTO
     {
     }
 }

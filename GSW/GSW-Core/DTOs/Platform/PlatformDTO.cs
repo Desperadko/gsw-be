@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.DTOs.Platform
 {
-    public record PlatformDTO(string Name)
+    public record PlatformDTO(int Id, string Name) : BaseDTO
     {
     }
 }

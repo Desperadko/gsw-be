@@ -1,0 +1,30 @@
+﻿using GSW_Core.DTOs.Genre;
+using GSW_Core.Responses.General;
+using GSW_Core.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GSW.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class GenreController : ControllerBase
+    {
+        private readonly IGenreService genreService;
+
+        public GenreController(IGenreService genreService)
+        {
+            this.genreService = genreService;
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<GetAllResponse<GenreDTO>>> GetAll()
+        {
+            var genres = await genreService.GetAllAsync();
+
+            return Ok(new GetAllResponse<GenreDTO>(genres));
+        }
+    }
+}

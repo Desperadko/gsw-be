@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.DTOs.Genre
 {
-    public record GenreDTO(string Name)
+    public record GenreDTO(int Id, string Name) : BaseDTO
     {
     }
 }

@@ -24,7 +24,7 @@ namespace GSW_Core.Services.Implementations
             var platforms = await platformRepository.GetAllAsync() ?? throw new NotFoundException("No platforms have been registered");
 
             return platforms
-                .Select(p => new PlatformDTO(p.Name))
+                .Select(p => new PlatformDTO(p.Id, p.Name))
                 .ToList();
         }
     }

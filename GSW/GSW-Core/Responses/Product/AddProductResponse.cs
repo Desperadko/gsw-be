@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses.Product
 {
-    public record AddProductResponse(ProductDTO product)
+    public record AddProductResponse(ProductDTO Product)
     {
     }
 }

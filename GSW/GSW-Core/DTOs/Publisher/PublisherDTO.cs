@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.DTOs.Publisher
 {
-    public record PublisherDTO(string Name)
+    public record PublisherDTO(int Id, string Name) : BaseDTO
     {
     }
 }

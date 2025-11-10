@@ -28,7 +28,7 @@ namespace GSW_Core.Repositories.Implementations
         public async Task<IEnumerable<Platform>?> GetAllAsync()
         {
             return await dbContext.Platforms
-                .OrderBy(p => p.Name, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(p => p.Name.ToLower())
                 .ToListAsync();
         }
 

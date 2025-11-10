@@ -28,7 +28,7 @@ namespace GSW_Core.Repositories.Implementations
         public async Task<IEnumerable<Genre>?> GetAllAsync()
         {
             return await dbContext.Genres
-                .OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(g => g.Name.ToLower())
                 .ToListAsync();
         }
 

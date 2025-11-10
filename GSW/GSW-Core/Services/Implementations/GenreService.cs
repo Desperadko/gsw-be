@@ -24,7 +24,7 @@ namespace GSW_Core.Services.Implementations
             var genres = await genreRepository.GetAllAsync() ?? throw new NotFoundException("No genres have been registered");
 
             return genres
-                .Select(g => new GenreDTO(g.Name))
+                .Select(g => new GenreDTO(g.Id, g.Name))
                 .ToList();
         }
     }

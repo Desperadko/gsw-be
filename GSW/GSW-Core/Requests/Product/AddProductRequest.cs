@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Requests.Product
 {
-    public class AddProductRequest
+    public record AddProductRequest(
+        string Name,
+        string Description,
+        DateTime ReleaseDate,
+        decimal Price,
+        ICollection<int> DevelopersIds,
+        ICollection<int> PublishersIds,
+        ICollection<int> GenresIds,
+        ICollection<int> PlatformsIds)
     {
-
     }
 }

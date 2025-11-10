@@ -28,7 +28,7 @@ namespace GSW_Core.Repositories.Implementations
         public async Task<IEnumerable<Developer>?> GetAllAsync()
         {
             return await dbContext.Developers
-                .OrderBy(developer => developer.Name, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(developer => developer.Name.ToLower())
                 .ToListAsync();
         }
 

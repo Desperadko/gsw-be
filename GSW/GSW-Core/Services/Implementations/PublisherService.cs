@@ -24,7 +24,7 @@ namespace GSW_Core.Services.Implementations
             var publishers = await publisherRepository.GetAllAsync() ?? throw new NotFoundException("No publishers have been registered");
 
             return publishers
-                .Select(p => new PublisherDTO(p.Name))
+                .Select(p => new PublisherDTO(p.Id, p.Name))
                 .ToList();
         }
     }

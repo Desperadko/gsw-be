@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.DTOs.Developer
 {
-    public record DeveloperDTO(string Name)
+    public record DeveloperDTO(int Id, string Name) : BaseDTO
     {
     }
 }
