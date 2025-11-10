@@ -106,10 +106,21 @@ namespace GSW.Extensions
 
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IDeveloperRepository, DeveloperRepository>();
+            services.AddScoped<IPublisherRepository, PublisherRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IPlatformRepository, PlatformRepository>();
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IDeveloperService, DeveloperService>();
+            services.AddScoped<IPublisherService, PublisherService>();
+            services.AddScoped<IGenreService, GenreService>();
+            services.AddScoped<IPlatformService, PlatformService>();
 
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IJwtService, JwtService>();
 
             services.AddScoped<IPasswordHasher<Account>, PasswordHasher<Account>>();
