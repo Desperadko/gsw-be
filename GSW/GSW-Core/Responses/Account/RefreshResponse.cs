@@ -6,8 +6,5 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses.Account
 {
-    public class RefreshResponse
-    {
-        public required string Token { get; init; }
-    }
+    public record RefreshResponse(string Token);
 }

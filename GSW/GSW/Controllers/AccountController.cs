@@ -46,27 +46,27 @@ namespace GSW.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<RegisterResponse>> Register([FromBody]RegisterRequest request)
         {
-            var (id, dto) = await accountService.RegisterAsync(request);
+            var (id, dto) = await accountService.RegisterAsync(request.Credentials);
 
             var accessToken = jwtService.GenerateAccessToken(id, dto);
             var refreshToken = jwtService.GenerateRefreshToken(id);
 
             await refreshTokenService.AddAsync(id, refreshToken);
 
-            return Ok(new RegisterResponse { Account = dto, Token = accessToken });
+            return Ok(new RegisterResponse(accessToken, dto));
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login([FromBody]LoginRequest request)
         {
-            var (id, dto) = await accountService.LoginAsync(request);
+            var (id, dto) = await accountService.LoginAsync(request.Credentials);
 
             var accessToken = jwtService.GenerateAccessToken(id, dto);
             var refreshToken = jwtService.GenerateRefreshToken(id);
 
             await refreshTokenService.AddAsync(id, refreshToken);
 
-            return Ok(new RegisterResponse { Account = dto, Token = accessToken });
+            return Ok(new RegisterResponse(accessToken, dto));
         }
 
         [HttpPost("refresh")]
@@ -84,7 +84,7 @@ namespace GSW.Controllers
 
                 var token = jwtService.GenerateAccessToken(accountId, dto);
 
-                return Ok(new RefreshResponse { Token = token });
+                return Ok(new RefreshResponse(token));
             }
 
             return Unauthorized(request);
@@ -98,10 +98,10 @@ namespace GSW.Controllers
             {
                 await refreshTokenService.RevokeLastAsync(accountId);
 
-                return Ok(new LogoutResponse { Message = "Logged out successfully" });
+                return Ok(new LogoutResponse("Logged out successfully"));
             }
 
-            return Unauthorized(new LogoutResponse { Message = "Couldn't logout"});
+            return Unauthorized(new LogoutResponse("Couldn't logout"));
         }
 
         [Authorize(Roles = RoleConstants.Admin)]
@@ -110,9 +110,9 @@ namespace GSW.Controllers
         {
             await refreshTokenService.RevokeAllAsync(id);
 
-            var account = await accountService.UpdateRoleAsync(id, request);
+            var account = await accountService.UpdateRoleAsync(id, request.Role);
 
-            return Ok(new UpdateRoleReponse { Account = account });
+            return Ok(new UpdateRoleReponse(account));
         }
     }
 }

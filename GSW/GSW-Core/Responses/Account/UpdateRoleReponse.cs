@@ -7,8 +7,5 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses.Account
 {
-    public class UpdateRoleReponse
-    {
-        public required AccountDTO Account { get; init; }
-    }
+    public record UpdateRoleReponse(AccountDTO Account);
 }

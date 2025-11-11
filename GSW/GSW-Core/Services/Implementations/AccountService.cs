@@ -58,18 +58,18 @@ namespace GSW_Core.Services.Implementations
             return new AccountDTO(account.Username, account.Email, account.Role);
         }
 
-        public async Task<(int accountId, AccountDTO accountDTO)> RegisterAsync(RegisterRequest request)
+        public async Task<(int accountId, AccountDTO accountDTO)> RegisterAsync(AccountRegisterDTO credentials)
         {
             var account = new Account
             {
-                Username = request.Username,
-                Email = request.Email,
+                Username = credentials.Username,
+                Email = credentials.Email,
                 Role = RoleConstants.User
             };
 
             var dto = new AccountDTO(account.Username, account.Email, account.Role);
 
-            account.Password = passwordHasher.HashPassword(account, request.Password);
+            account.Password = passwordHasher.HashPassword(account, credentials.Password);
 
             if (!account.IsVaild) throw new BadRequestException("Something went wrong when hashing the password.");
 
@@ -79,12 +79,12 @@ namespace GSW_Core.Services.Implementations
             return (account.Id, dto);
         }
 
-        public async Task<(int accountId, AccountDTO accountDTO)> LoginAsync(LoginRequest request)
+        public async Task<(int accountId, AccountDTO accountDTO)> LoginAsync(AccountLoginDTO credentials)
         {
-            var account = await accountRepository.GetByUsernameAsync(request.Username)
-                ?? throw new NotFoundException(ErrorFieldConstants.USERNAME, $"Username: {request.Username} doesn't exists.");
+            var account = await accountRepository.GetByUsernameAsync(credentials.Username)
+                ?? throw new NotFoundException(ErrorFieldConstants.USERNAME, $"Username: {credentials.Username} doesn't exists.");
             
-            var isVerified = await VerifyPassword(account, request.Password);
+            var isVerified = await VerifyPassword(account, credentials.Password);
             if (!isVerified)
             {
                 throw new UnauthorizedException(ErrorFieldConstants.PASSWORD, "Invalid password.");
@@ -95,12 +95,12 @@ namespace GSW_Core.Services.Implementations
             return (account.Id, dto);
         }
 
-        public async Task<AccountDTO> UpdateRoleAsync(int id, UpdateRoleRequest request)
+        public async Task<AccountDTO> UpdateRoleAsync(int id, string role)
         {
             var account = await accountRepository.GetByIdAsync(id)
                 ?? throw new NotFoundException(ErrorFieldConstants.ID, $"Account with id: '{id}' doesn't exist.");
 
-            account.Role = request.Role;
+            account.Role = role;
 
             var count = await accountRepository.SaveChangesAsync();
             if (count <= 0) throw new BadRequestException($"Couldn't update role to account with username: '{account.Username}'");
@@ -108,7 +108,7 @@ namespace GSW_Core.Services.Implementations
             return new AccountDTO(account.Username, account.Email, account.Role);
         }
 
-        public async Task<bool> VerifyPassword(Account account, string providedPassword)
+        private async Task<bool> VerifyPassword(Account account, string providedPassword)
         {
             var result = passwordHasher.VerifyHashedPassword(account, account.Password, providedPassword);
 

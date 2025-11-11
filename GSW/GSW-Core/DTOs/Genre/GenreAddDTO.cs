@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSW_Core.Responses.Account
+namespace GSW_Core.DTOs.Genre
 {
-    public record LogoutResponse(string Message);
+    public record GenreAddDTO(string Name)
+    {
+    }
 }

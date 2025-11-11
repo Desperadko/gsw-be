@@ -19,6 +19,11 @@ namespace GSW_Core.Services.Implementations
             this.genreRepository = genreRepository;
         }
 
+        public Task<GenreDTO> AddAsync(GenreAddDTO genre)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<GenreDTO>> GetAllAsync()
         {
             var genres = await genreRepository.GetAllAsync() ?? throw new NotFoundException("No genres have been registered");

@@ -16,8 +16,8 @@ namespace GSW_Core.Services.Interfaces
         AccountDTO GetCurrent(IEnumerable<Claim> claims);
         Task<AccountDTO> GetAsync(string username);
         Task<AccountDTO> GetAsync(int id);
-        Task<(int accountId, AccountDTO accountDTO)> RegisterAsync(RegisterRequest request);
-        Task<(int accountId, AccountDTO accountDTO)> LoginAsync(LoginRequest request);
-        Task<AccountDTO> UpdateRoleAsync(int id, UpdateRoleRequest request);
+        Task<(int accountId, AccountDTO accountDTO)> RegisterAsync(AccountRegisterDTO credentials);
+        Task<(int accountId, AccountDTO accountDTO)> LoginAsync(AccountLoginDTO credentials);
+        Task<AccountDTO> UpdateRoleAsync(int id, string role);
     }
 }

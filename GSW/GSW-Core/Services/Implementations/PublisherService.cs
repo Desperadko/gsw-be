@@ -19,6 +19,11 @@ namespace GSW_Core.Services.Implementations
             this.publisherRepository = publisherRepository;
         }
 
+        public Task<PublisherDTO> AddAsync(PublisherAddDTO publisherDTO)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<PublisherDTO>> GetAllAsync()
         {
             var publishers = await publisherRepository.GetAllAsync() ?? throw new NotFoundException("No publishers have been registered");

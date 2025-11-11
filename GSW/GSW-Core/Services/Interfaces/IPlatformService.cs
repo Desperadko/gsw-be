@@ -10,5 +10,6 @@ namespace GSW_Core.Services.Interfaces
     public interface IPlatformService
     {
         Task<IEnumerable<PlatformDTO>> GetAllAsync();
+        Task<PlatformDTO> AddAsync(PlatformAddDTO platform);
     }
 }

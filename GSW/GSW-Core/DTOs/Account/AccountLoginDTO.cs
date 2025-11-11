@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSW_Core.Responses.Account
+namespace GSW_Core.DTOs.Account
 {
-    public record LogoutResponse(string Message);
+    public record AccountLoginDTO(string Username, string Password)
+    {
+    }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses.General
 {
-    public record GetAllResponse<T>(IEnumerable<T> dtos) where T : BaseDTO
+    public record GetAllResponse<T>(IEnumerable<T> Dtos) where T : BaseDTO
     {
     }
 }

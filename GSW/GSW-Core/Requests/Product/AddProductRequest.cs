@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GSW_Core.DTOs.Product;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,15 +7,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Requests.Product
 {
-    public record AddProductRequest(
-        string Name,
-        string Description,
-        DateTime ReleaseDate,
-        decimal Price,
-        ICollection<int> DevelopersIds,
-        ICollection<int> PublishersIds,
-        ICollection<int> GenresIds,
-        ICollection<int> PlatformsIds)
+    public record AddProductRequest(ProductAddDTO Product)
     {
     }
 }

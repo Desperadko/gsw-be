@@ -14,15 +14,15 @@ namespace GSW_Core.Validators
     {
         public RegisterRequestValidator()
         {
-            RuleFor(a => a.Username)
+            RuleFor(a => a.Credentials.Username)
                 .NotEmpty()
                 .WithMessage("Username should not be empty.");
 
-            RuleFor(a => a.Email)
+            RuleFor(a => a.Credentials.Email)
                 .NotEmpty()
                 .WithMessage("Email should not be empty.");
 
-            RuleFor(a => a.Password)
+            RuleFor(a => a.Credentials.Password)
                 .NotEmpty()
                 .WithMessage("Password should not be empty.");
         }

@@ -19,6 +19,11 @@ namespace GSW_Core.Services.Implementations
             this.platformRepository = platformRepository;
         }
 
+        public Task<PlatformDTO> AddAsync(PlatformAddDTO platform)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<PlatformDTO>> GetAllAsync()
         {
             var platforms = await platformRepository.GetAllAsync() ?? throw new NotFoundException("No platforms have been registered");

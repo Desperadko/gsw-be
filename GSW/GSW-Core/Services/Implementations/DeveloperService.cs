@@ -19,6 +19,11 @@ namespace GSW_Core.Services.Implementations
             this.developerRepository = developerRepository;
         }
 
+        public Task<DeveloperDTO> AddAsync(DeveloperAddDTO developer)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<DeveloperDTO>> GetAllAsync()
         {
             var developers = await developerRepository.GetAllAsync() ?? throw new NotFoundException("No developers have been registered");

@@ -6,8 +6,5 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Requests.Account
 {
-    public class UpdateRoleRequest
-    {
-        public required string Role { get; init; }
-    }
+    public record UpdateRoleRequest(string Role);
 }

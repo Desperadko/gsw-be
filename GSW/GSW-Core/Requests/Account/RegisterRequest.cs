@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GSW_Core.DTOs.Account;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Requests.Account
 {
-    public class RegisterRequest
+    public record RegisterRequest(AccountRegisterDTO Credentials)
     {
-        public required string Username { get; init; }
-        public required string Email { get; init; }
-        public required string Password { get; init; }
     }
 }

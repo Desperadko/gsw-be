@@ -10,6 +10,6 @@ namespace GSW_Core.Services.Interfaces
     public interface IProductService
     {
         Task<ProductDTO> GetAsync(int id);
-        Task<ProductDTO> AddAsync(ProductDTO product);
+        Task<ProductDTO> AddAsync(ProductAddDTO product);
     }
 }
