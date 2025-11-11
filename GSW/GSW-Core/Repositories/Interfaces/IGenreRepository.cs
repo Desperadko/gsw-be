@@ -9,8 +9,10 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IGenreRepository
     {
-        Task<Genre?> GetAsync(int id);
+        Task<Genre?> GetByIdAsync(int id);
+        Task<Genre?> GetByNameAsync(string name);
         Task<IEnumerable<Genre>?> GetAllAsync();
         Task<int> AddAsync(Genre genre);
+        Task<bool> ExistsByNameAsync(string name);
     }
 }

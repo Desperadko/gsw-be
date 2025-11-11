@@ -25,6 +25,12 @@ namespace GSW_Core.Repositories.Implementations
             return await dbContext.SaveChangesAsync();
         }
 
+        public async Task<bool> ExistsByNameAsync(string name)
+        {
+            return await dbContext.Genres
+                .AnyAsync(g => g.Name == name);
+        }
+
         public async Task<IEnumerable<Genre>?> GetAllAsync()
         {
             return await dbContext.Genres
@@ -32,11 +38,18 @@ namespace GSW_Core.Repositories.Implementations
                 .ToListAsync();
         }
 
-        public async Task<Genre?> GetAsync(int id)
+        public async Task<Genre?> GetByIdAsync(int id)
         {
             return await dbContext.Genres
                 .Include(g => g.Products)
                 .FirstOrDefaultAsync(g => g.Id == id);
+        }
+
+        public async Task<Genre?> GetByNameAsync(string name)
+        {
+            return await dbContext.Genres
+                .Include(g => g.Products)
+                .FirstOrDefaultAsync(g => g.Name == name);
         }
     }
 }

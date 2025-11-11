@@ -32,11 +32,24 @@ namespace GSW_Core.Repositories.Implementations
                 .ToListAsync();
         }
 
-        public async Task<Developer?> GetAsync(int id)
+        public async Task<Developer?> GetByIdAsync(int id)
         {
             return await dbContext.Developers
                 .Include(d => d.Products)
                 .FirstOrDefaultAsync(d => d.Id == id);
+        }
+
+        public async Task<Developer?> GetByNameAsync(string name)
+        {
+            return await dbContext.Developers
+                .Include(d => d.Products)
+                .FirstOrDefaultAsync(d => d.Name == name);
+        }
+
+        public async Task<bool> ExistsByNameAsync(string name)
+        {
+            return await dbContext.Developers
+                .AnyAsync(d => d.Name == name);
         }
     }
 }

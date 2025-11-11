@@ -22,6 +22,9 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<GenreDTO> AddAsync(GenreAddDTO genreDTO)
         {
+            var exists = await genreRepository.ExistsByNameAsync(genreDTO.Name);
+            if (exists) throw new BadRequestException($"Genre: '{genreDTO.Name}' already exists");
+
             var genre = new Genre()
             {
                 Name = genreDTO.Name,

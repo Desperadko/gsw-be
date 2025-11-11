@@ -2,7 +2,7 @@
 using GSW_Core.Requests.Account;
 using GSW_Core.Responses.Account;
 using GSW_Core.Services.Interfaces;
-using GSW_Core.Utilities.Constants;
+using GSW_Core.Utilities.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -104,7 +104,7 @@ namespace GSW.Controllers
             return Unauthorized(new LogoutResponse("Couldn't logout"));
         }
 
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = RoleHelper.Admin)]
         [HttpPut("{id}/role")]
         public async Task<ActionResult<UpdateRoleReponse>> UpdateRole(int id, [FromBody]UpdateRoleRequest request)
         {

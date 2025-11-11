@@ -22,6 +22,9 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<DeveloperDTO> AddAsync(DeveloperAddDTO developerDTO)
         {
+            var exists = await developerRepository.ExistsByNameAsync(developerDTO.Name);
+            if (exists) throw new BadRequestException($"Developer: '{developerDTO.Name}' already exists");
+
             var developer = new Developer()
             {
                 Name = developerDTO.Name,

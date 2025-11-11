@@ -22,6 +22,9 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<PlatformDTO> AddAsync(PlatformAddDTO platformDTO)
         {
+            var exists = await platformRepository.ExistsByNameAsync(platformDTO.Name);
+            if (exists) throw new BadRequestException($"Platform: '{platformDTO.Name}' already exists");
+
             var platform = new Platform()
             {
                 Name = platformDTO.Name,

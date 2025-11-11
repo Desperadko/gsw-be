@@ -9,8 +9,10 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IDeveloperRepository
     {
-        Task<Developer?> GetAsync(int id);
+        Task<Developer?> GetByIdAsync(int id);
+        Task<Developer?> GetByNameAsync(string name);
         Task<IEnumerable<Developer>?> GetAllAsync();
         Task<int> AddAsync(Developer developer);
+        Task<bool> ExistsByNameAsync(string name);
     }
 }

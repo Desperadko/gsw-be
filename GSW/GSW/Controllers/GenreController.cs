@@ -2,7 +2,7 @@
 using GSW_Core.Requests.Genre;
 using GSW_Core.Responses.General;
 using GSW_Core.Services.Interfaces;
-using GSW_Core.Utilities.Constants;
+using GSW_Core.Utilities.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace GSW.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = RoleHelper.Admin)]
         public async Task<ActionResult<GetAllResponse<GenreDTO>>> GetAll()
         {
             var genres = await genreService.GetAllAsync();
@@ -30,7 +30,7 @@ namespace GSW.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = RoleHelper.Admin)]
         public async Task<ActionResult<AddResponse<GenreDTO>>> Add([FromBody]AddGenreRequest request)
         {
             var genre = await genreService.AddAsync(request.Genre);

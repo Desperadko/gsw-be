@@ -22,6 +22,9 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<PublisherDTO> AddAsync(PublisherAddDTO publisherDTO)
         {
+            var exists = await publisherRepository.ExistsByNameAsync(publisherDTO.Name);
+            if (exists) throw new BadRequestException($"Publisher: '{publisherDTO.Name}' already exists");
+
             var publisher = new Publisher()
             {
                 Name = publisherDTO.Name,

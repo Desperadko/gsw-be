@@ -4,8 +4,8 @@ using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Requests.Account;
 using GSW_Core.Responses;
 using GSW_Core.Services.Interfaces;
-using GSW_Core.Utilities.Constants;
 using GSW_Core.Utilities.Errors.Exceptions;
+using GSW_Core.Utilities.Helpers;
 using GSW_Data.Constants;
 using GSW_Data.Models;
 using Microsoft.AspNetCore.Identity;
@@ -64,7 +64,7 @@ namespace GSW_Core.Services.Implementations
             {
                 Username = credentials.Username,
                 Email = credentials.Email,
-                Role = RoleConstants.User
+                Role = RoleHelper.User
             };
 
             var dto = new AccountDTO(account.Username, account.Email, account.Role);
@@ -97,10 +97,13 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<AccountDTO> UpdateRoleAsync(int id, string role)
         {
+            var lowerCasedRole = role.ToLower();
+            if (!RoleHelper.IsValidRole(lowerCasedRole)) throw new BadRequestException($"Role: '{role}' doesn't exist");
+
             var account = await accountRepository.GetByIdAsync(id)
                 ?? throw new NotFoundException(ErrorFieldConstants.ID, $"Account with id: '{id}' doesn't exist.");
 
-            account.Role = role;
+            account.Role = lowerCasedRole;
 
             var count = await accountRepository.SaveChangesAsync();
             if (count <= 0) throw new BadRequestException($"Couldn't update role to account with username: '{account.Username}'");
