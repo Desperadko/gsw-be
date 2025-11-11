@@ -18,7 +18,7 @@ namespace GSW_Core.Services.Implementations
             this.productRepository = productRepository;
         }
 
-        public Task<ProductDTO> AddAsync(ProductAddDTO product)
+        public Task<ProductDTO> AddAsync(ProductAddDTO productDTO)
         {
             throw new NotImplementedException();
         }

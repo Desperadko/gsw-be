@@ -2,6 +2,7 @@
 using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Errors.Exceptions;
+using GSW_Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,17 @@ namespace GSW_Core.Services.Implementations
             this.publisherRepository = publisherRepository;
         }
 
-        public Task<PublisherDTO> AddAsync(PublisherAddDTO publisherDTO)
+        public async Task<PublisherDTO> AddAsync(PublisherAddDTO publisherDTO)
         {
-            throw new NotImplementedException();
+            var publisher = new Publisher()
+            {
+                Name = publisherDTO.Name,
+            };
+
+            var count = await publisherRepository.AddAsync(publisher);
+            if(count <= 0) throw new BadRequestException("Couldn't add publisher to database");
+
+            return new PublisherDTO(publisher.Id, publisher.Name);
         }
 
         public async Task<IEnumerable<PublisherDTO>> GetAllAsync()

@@ -10,6 +10,6 @@ namespace GSW_Core.Services.Interfaces
     public interface IDeveloperService
     {
         Task<IEnumerable<DeveloperDTO>> GetAllAsync();
-        Task<DeveloperDTO> AddAsync(DeveloperAddDTO developer);
+        Task<DeveloperDTO> AddAsync(DeveloperAddDTO publisherDTO);
     }
 }

@@ -2,6 +2,7 @@
 using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Errors.Exceptions;
+using GSW_Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,17 @@ namespace GSW_Core.Services.Implementations
             this.developerRepository = developerRepository;
         }
 
-        public Task<DeveloperDTO> AddAsync(DeveloperAddDTO developer)
+        public async Task<DeveloperDTO> AddAsync(DeveloperAddDTO developerDTO)
         {
-            throw new NotImplementedException();
+            var developer = new Developer()
+            {
+                Name = developerDTO.Name,
+            };
+
+            var count = await developerRepository.AddAsync(developer);
+            if (count <= 0) throw new BadRequestException("Couldn't add developer to database");
+
+            return new DeveloperDTO(developer.Id, developer.Name);
         }
 
         public async Task<IEnumerable<DeveloperDTO>> GetAllAsync()

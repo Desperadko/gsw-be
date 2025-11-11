@@ -2,6 +2,7 @@
 using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Errors.Exceptions;
+using GSW_Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,17 @@ namespace GSW_Core.Services.Implementations
             this.platformRepository = platformRepository;
         }
 
-        public Task<PlatformDTO> AddAsync(PlatformAddDTO platform)
+        public async Task<PlatformDTO> AddAsync(PlatformAddDTO platformDTO)
         {
-            throw new NotImplementedException();
+            var platform = new Platform()
+            {
+                Name = platformDTO.Name,
+            };
+
+            var count = await platformRepository.AddAsync(platform);
+            if (count <= 0) throw new BadRequestException("Couldn't add platform to database");
+
+            return new PlatformDTO(platform.Id, platform.Name);
         }
 
         public async Task<IEnumerable<PlatformDTO>> GetAllAsync()

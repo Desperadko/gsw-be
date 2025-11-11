@@ -1,4 +1,5 @@
 ﻿using GSW_Core.DTOs.Developer;
+using GSW_Core.Requests.Developer;
 using GSW_Core.Responses.General;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Constants;
@@ -26,6 +27,15 @@ namespace GSW.Controllers
             var developers = await developerService.GetAllAsync();
 
             return Ok(new GetAllResponse<DeveloperDTO>(developers));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RoleConstants.Admin)]
+        public async Task<ActionResult<AddResponse<DeveloperDTO>>> Add([FromBody]AddDeveloperRequest request)
+        {
+            var developer = await developerService.AddAsync(request.Developer);
+
+            return Ok(new AddResponse<DeveloperDTO>(developer));
         }
     }
 }

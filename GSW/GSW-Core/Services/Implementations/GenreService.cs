@@ -2,6 +2,7 @@
 using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Errors.Exceptions;
+using GSW_Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,17 @@ namespace GSW_Core.Services.Implementations
             this.genreRepository = genreRepository;
         }
 
-        public Task<GenreDTO> AddAsync(GenreAddDTO genre)
+        public async Task<GenreDTO> AddAsync(GenreAddDTO genreDTO)
         {
-            throw new NotImplementedException();
+            var genre = new Genre()
+            {
+                Name = genreDTO.Name,
+            };
+
+            var count = await genreRepository.AddAsync(genre);
+            if (count <= 0) throw new BadRequestException("Couldn't add genre to database");
+
+            return new GenreDTO(genre.Id, genre.Name);
         }
 
         public async Task<IEnumerable<GenreDTO>> GetAllAsync()

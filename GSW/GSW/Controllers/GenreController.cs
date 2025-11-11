@@ -1,4 +1,5 @@
 ﻿using GSW_Core.DTOs.Genre;
+using GSW_Core.Requests.Genre;
 using GSW_Core.Responses.General;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Constants;
@@ -26,6 +27,15 @@ namespace GSW.Controllers
             var genres = await genreService.GetAllAsync();
 
             return Ok(new GetAllResponse<GenreDTO>(genres));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RoleConstants.Admin)]
+        public async Task<ActionResult<AddResponse<GenreDTO>>> Add([FromBody]AddGenreRequest request)
+        {
+            var genre = await genreService.AddAsync(request.Genre);
+
+            return Ok(new AddResponse<GenreDTO>(genre));
         }
     }
 }

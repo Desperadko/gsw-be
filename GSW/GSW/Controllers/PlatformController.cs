@@ -1,4 +1,5 @@
 ﻿using GSW_Core.DTOs.Platform;
+using GSW_Core.Requests.Platform;
 using GSW_Core.Responses.General;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Constants;
@@ -26,6 +27,15 @@ namespace GSW.Controllers
             var platforms = await platformService.GetAllAsync();
 
             return Ok(new GetAllResponse<PlatformDTO>(platforms));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RoleConstants.Admin)]
+        public async Task<ActionResult<AddResponse<PlatformDTO>>> Add(AddPlatformRequest request)
+        {
+            var platform = await platformService.AddAsync(request.Platform);
+
+            return Ok(new AddResponse<PlatformDTO>(platform));
         }
     }
 }

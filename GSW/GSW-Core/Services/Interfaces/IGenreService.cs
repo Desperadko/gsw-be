@@ -10,6 +10,6 @@ namespace GSW_Core.Services.Interfaces
     public interface IGenreService
     {
         Task<IEnumerable<GenreDTO>> GetAllAsync();
-        Task<GenreDTO> AddAsync(GenreAddDTO genre);
+        Task<GenreDTO> AddAsync(GenreAddDTO genreDTO);
     }
 }
