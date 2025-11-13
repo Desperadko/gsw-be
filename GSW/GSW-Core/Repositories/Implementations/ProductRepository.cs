@@ -21,6 +21,14 @@ namespace GSW_Core.Repositories.Implementations
 
         public async Task<int> AddAsync(Product product)
         {
+            dbContext.ChangeTracker.Clear();
+
+            //this is required to ensure that we don't add
+            //  new records of the complementary entities to the DB
+            //we need to make sure though,
+            //  that the entities already do exist before hand
+            AttachComplementaryEntities(product);
+
             await dbContext.Products.AddAsync(product);
             return await dbContext.SaveChangesAsync();
         }
@@ -49,6 +57,18 @@ namespace GSW_Core.Repositories.Implementations
                 .Include(p => p.Genres)
                 .Include(p => p.Platforms)
                 .FirstOrDefaultAsync(p => p.Name == name);
+        }
+
+        private void AttachComplementaryEntities(Product product)
+        {
+            foreach (var dev in product.Developers ?? Enumerable.Empty<Developer>())
+                dbContext.Entry(dev).State = EntityState.Unchanged;
+            foreach (var pub in product.Publishers ?? Enumerable.Empty<Publisher>())
+                dbContext.Entry(pub).State = EntityState.Unchanged;
+            foreach (var genre in product.Genres ?? Enumerable.Empty<Genre>())
+                dbContext.Entry(genre).State = EntityState.Unchanged;
+            foreach (var platform in product.Platforms ?? Enumerable.Empty<Platform>())
+                dbContext.Entry(platform).State = EntityState.Unchanged;
         }
     }
 }

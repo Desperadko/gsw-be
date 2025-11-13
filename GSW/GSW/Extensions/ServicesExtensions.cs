@@ -148,5 +148,12 @@ namespace GSW.Extensions
 
             return services;
         }
+
+        public static IServiceCollection AddInMemoryCache(this IServiceCollection services)
+        {
+            services.AddMemoryCache();
+
+            return services;
+        }
     }
 }

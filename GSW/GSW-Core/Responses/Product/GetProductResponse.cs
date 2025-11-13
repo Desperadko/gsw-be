@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses.Product
 {
-    public record AddProductResponse : AddResponse<ProductDTO>
+    public record GetProductResponse : GetResponse<ProductDTO>
     {
-
-        public AddProductResponse(ProductDTO DTO) : base(DTO)
+        public GetProductResponse(ProductDTO DTO) : base(DTO)
         {
         }
     }
