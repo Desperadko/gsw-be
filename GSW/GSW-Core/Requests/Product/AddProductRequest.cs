@@ -1,4 +1,5 @@
 ﻿using GSW_Core.DTOs.Product;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Requests.Product
 {
-    public record AddProductRequest(ProductAddDTO Product)
+    public record AddProductRequest(ProductAddDTO Product, IFormFile Image)
     {
     }
 }

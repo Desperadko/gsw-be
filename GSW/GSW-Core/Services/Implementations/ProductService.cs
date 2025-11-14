@@ -99,6 +99,7 @@ namespace GSW_Core.Services.Implementations
             if (count <= 0) throw new BadRequestException("Couldn't add product");
 
             return new ProductDTO(
+                product.Id,
                 product.Name,
                 product.Description,
                 product.ReleaseDate,
@@ -126,6 +127,7 @@ namespace GSW_Core.Services.Implementations
                 ?? throw new NotFoundException("Product's platforms were not loaded from the database");
 
             return new ProductDTO(
+                product.Id,
                 product.Name,
                 product.Description,
                 product.ReleaseDate,

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace GSW_Core.DTOs.Product
 {
     public record ProductDTO(
+        int Id,
         string Name,
         string Description,
         DateTime ReleaseDate,
@@ -21,5 +22,6 @@ namespace GSW_Core.DTOs.Product
         IEnumerable<PlatformDTO> Platforms
         ) : BaseDTO
     {
+        public string? ImageURL { get; init; }
     }
 }

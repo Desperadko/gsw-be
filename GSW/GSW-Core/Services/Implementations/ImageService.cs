@@ -1,4 +1,6 @@
-﻿using GSW_Core.Services.Interfaces;
+﻿using GSW_Core.DTOs.Image;
+using GSW_Core.Services.Interfaces;
+using GSW_Core.Utilities.Constants;
 using GSW_Core.Utilities.Errors.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace GSW_Core.Services.Implementations
 {
@@ -15,18 +16,18 @@ namespace GSW_Core.Services.Implementations
     {
         private readonly string imageDirectoryFilePath;
 
-        private readonly string[] validFormats = [".png", "jpeg", "jpg"];
+        private readonly string[] validFormats = [".png", ".jpeg", ".jpg"];
         private readonly string[] validContentTypes = ["image/png", "image/jpeg", "image/jpg"];
 
         private const string imageHeader = "game-";
 
         public ImageService(IWebHostEnvironment environment)
         {
-            imageDirectoryFilePath = Path.Combine(environment.ContentRootPath, "Images");
+            imageDirectoryFilePath = Path.Combine(environment.ContentRootPath, FileConstants.ImagesDirectory);
             Directory.CreateDirectory(imageDirectoryFilePath);
         }
 
-        public async Task AddAsync(int productId, IFormFile image)
+        public async Task<string> AddAsync(int productId, IFormFile image)
         {
             Validate(image);
 
@@ -37,21 +38,34 @@ namespace GSW_Core.Services.Implementations
             {
                 await image.CopyToAsync(stream);
             }
+
+            return newFileName;
         }
 
-        public async Task<byte[]> GetAsync(int productId)
+        public async Task<ImageDTO> GetAsync(string fileName)
         {
-            foreach(var format in validFormats)
+            var fullPath = Path.Combine(imageDirectoryFilePath, fileName);
+            if (File.Exists(fullPath))
+            {
+                return new ImageDTO(await File.ReadAllBytesAsync(fullPath), GetContentType(fileName));
+            }
+
+            throw new NotFoundException($"Image doesn't exist: '{fileName}'");
+        }
+
+        public string GetFileName(int productId)
+        {
+            foreach (var format in validFormats)
             {
                 var fileName = imageHeader + productId + format;
                 var fullPath = Path.Combine(imageDirectoryFilePath, fileName);
-                if (File.Exists(fileName))
+                if (File.Exists(fullPath))
                 {
-                    return await File.ReadAllBytesAsync(fullPath);
+                    return fileName;
                 }
             }
 
-            throw new NotFoundException($"No image for product with ID: '{productId}'");
+            throw new NotFoundException($"No image exists for product with id: '{productId}'");
         }
 
         public void Validate(IFormFile image)
@@ -61,7 +75,7 @@ namespace GSW_Core.Services.Implementations
                 throw new BadRequestException("No image provided");
             }
 
-            if (!ValidateImageFormat(image.Name, out string extension))
+            if (!ValidateImageFormat(image.FileName, out string extension))
             {
                 throw new BadRequestException($"Invalid image format: '{extension}'");
             }
@@ -92,6 +106,16 @@ namespace GSW_Core.Services.Implementations
             }
 
             return validContentTypes.Contains(contentType);
+        }
+
+        private string GetContentType(string fileName)
+        {
+            return Path.GetExtension(fileName).ToLower() switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                _ => "application/octet-stream"
+            };
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using GSW_Core.Requests.Product;
+﻿using GSW.Constants;
+using GSW_Core.DTOs.Product;
+using GSW_Core.Requests.Product;
 using GSW_Core.Responses.General;
-using GSW_Core.Responses.Product;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -24,20 +25,30 @@ namespace GSW.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<GetProductResponse>> Get([FromQuery]int id)
+        public async Task<ActionResult<GetResponse<ProductDTO>>> Get([FromQuery]int id)
         {
             var product = await productService.GetAsync(id);
 
-            return Ok(new GetProductResponse(product));
+            var imageFileName = imageService.GetFileName(id);
+            var imageURL = ApiRoutes.ImageController + "/" + imageFileName;
+
+            var productWithImage = product with { ImageURL = imageURL };
+
+            return Ok(new GetResponse<ProductDTO>(productWithImage));
         }
 
         [HttpPost]
         [Authorize(Roles = RoleHelper.Admin)]
-        public async Task<ActionResult<AddProductResponse>> Add([FromBody]AddProductRequest request)
+        public async Task<ActionResult<AddResponse<ProductDTO>>> Add([FromBody]AddProductRequest request)
         {
             var product = await productService.AddAsync(request.Product);
 
-            return Ok(new AddProductResponse(product));
-        } 
+            var imageFileName = await imageService.AddAsync(product.Id, request.Image);
+            var imageURL = ApiRoutes.ImageController + "/" + imageFileName;
+
+            var productWithImage = product with { ImageURL = imageURL };
+
+            return Ok(new AddResponse<ProductDTO>(productWithImage));
+        }
     }
 }
