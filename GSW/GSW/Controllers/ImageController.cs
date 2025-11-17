@@ -1,7 +1,10 @@
 ﻿using GSW.Constants;
 using GSW_Core.DTOs.Image;
+using GSW_Core.Requests.Image;
 using GSW_Core.Responses.General;
 using GSW_Core.Services.Interfaces;
+using GSW_Core.Utilities.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +27,18 @@ namespace GSW.Controllers
             var image = await imageService.GetAsync(fileName);
 
             return File(image.Bytes, image.ContentType);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RoleHelper.Admin)]
+        public async Task<ActionResult<AddResponse<ImageMetaDTO>>> Add([FromForm]AddImageRequest request)
+        {
+            var image = await imageService.AddAsync(request.ProductId, request.Image);
+
+            var url = ApiRoutes.ImageController + "/" + image.FileName;
+            image.URL = url;
+
+            return Ok(new AddResponse<ImageMetaDTO>(image));
         }
     }
 }

@@ -43,12 +43,7 @@ namespace GSW.Controllers
         {
             var product = await productService.AddAsync(request.Product);
 
-            var imageFileName = await imageService.AddAsync(product.Id, request.Image);
-            var imageURL = ApiRoutes.ImageController + "/" + imageFileName;
-
-            var productWithImage = product with { ImageURL = imageURL };
-
-            return Ok(new AddResponse<ProductDTO>(productWithImage));
+            return Ok(new AddResponse<ProductDTO>(product));
         }
     }
 }

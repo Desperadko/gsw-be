@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.DTOs.Image
 {
-    public record ImageDTO(byte[] Bytes, string ContentType)
+    public record ImageContentDTO(byte[] Bytes, string ContentType) : BaseDTO
     {
     }
 }

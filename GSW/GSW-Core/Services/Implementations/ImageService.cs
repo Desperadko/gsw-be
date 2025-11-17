@@ -27,7 +27,7 @@ namespace GSW_Core.Services.Implementations
             Directory.CreateDirectory(imageDirectoryFilePath);
         }
 
-        public async Task<string> AddAsync(int productId, IFormFile image)
+        public async Task<ImageMetaDTO> AddAsync(int productId, IFormFile image)
         {
             Validate(image);
 
@@ -39,15 +39,15 @@ namespace GSW_Core.Services.Implementations
                 await image.CopyToAsync(stream);
             }
 
-            return newFileName;
+            return new ImageMetaDTO(newFileName);
         }
 
-        public async Task<ImageDTO> GetAsync(string fileName)
+        public async Task<ImageContentDTO> GetAsync(string fileName)
         {
             var fullPath = Path.Combine(imageDirectoryFilePath, fileName);
             if (File.Exists(fullPath))
             {
-                return new ImageDTO(await File.ReadAllBytesAsync(fullPath), GetContentType(fileName));
+                return new ImageContentDTO(await File.ReadAllBytesAsync(fullPath), GetContentType(fileName));
             }
 
             throw new NotFoundException($"Image doesn't exist: '{fileName}'");
