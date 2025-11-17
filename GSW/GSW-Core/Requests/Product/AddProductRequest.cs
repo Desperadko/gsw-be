@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Requests.Product
 {
-    public record AddProductRequest(ProductAddDTO Product, IFormFile Image)
+    public record AddProductRequest(ProductAddDTO Product)
     {
     }
 }
