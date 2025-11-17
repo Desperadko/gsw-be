@@ -21,8 +21,8 @@ namespace GSW.Controllers
             this.imageService = imageService;
         }
 
-        [HttpGet("{fileName}")]
-        public async Task<FileResult> Get(string fileName)
+        [HttpGet]
+        public async Task<FileResult> Get([FromQuery]string fileName)
         {
             var image = await imageService.GetAsync(fileName);
 
@@ -33,7 +33,7 @@ namespace GSW.Controllers
         [Authorize(Roles = RoleHelper.Admin)]
         public async Task<ActionResult<AddResponse<ImageMetaDTO>>> Add([FromForm]AddImageRequest request)
         {
-            var image = await imageService.AddAsync(request.ProductId, request.Image);
+            var image = await imageService.AddAsync(request.Image);
 
             var url = ApiRoutes.ImageController + "/" + image.FileName;
             image.URL = url;

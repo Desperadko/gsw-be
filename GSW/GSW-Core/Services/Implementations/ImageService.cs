@@ -27,16 +27,16 @@ namespace GSW_Core.Services.Implementations
             Directory.CreateDirectory(imageDirectoryFilePath);
         }
 
-        public async Task<ImageMetaDTO> AddAsync(int productId, IFormFile image)
+        public async Task<ImageMetaDTO> AddAsync(ImageAddDTO image)
         {
-            Validate(image);
+            Validate(image.ImageData);
 
-            var newFileName = imageHeader + productId + Path.GetExtension(image.FileName);
+            var newFileName = imageHeader + image.ProductId + Path.GetExtension(image.ImageData.FileName);
             var fullPath = Path.Combine(imageDirectoryFilePath, newFileName);
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
-                await image.CopyToAsync(stream);
+                await image.ImageData.CopyToAsync(stream);
             }
 
             return new ImageMetaDTO(newFileName);

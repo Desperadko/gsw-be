@@ -10,7 +10,7 @@ namespace GSW_Core.Services.Interfaces
 {
     public interface IImageService
     {
-        Task<ImageMetaDTO> AddAsync(int productId, IFormFile image);
+        Task<ImageMetaDTO> AddAsync(ImageAddDTO image);
         Task<ImageContentDTO> GetAsync(string fileName);
         string GetFileName(int productId);
         void Validate(IFormFile image);
