@@ -35,7 +35,19 @@ namespace GSW.Controllers
         {
             var image = await imageService.AddAsync(request.Image);
 
-            var url = ApiRoutes.ImageController + "/" + image.FileName;
+            var url = Path.Combine(ApiRoutes.ImageController, image.FileName);
+            image.URL = url;
+
+            return Ok(new AddResponse<ImageMetaDTO>(image));
+        }
+
+        [HttpPost("default")]
+        [Authorize(Roles = RoleHelper.Admin)]
+        public async Task<ActionResult<AddResponse<ImageMetaDTO>>> AddDefault([FromBody]AddDefaultImageRequest request)
+        {
+            var image = await imageService.AddDefaultAsync(request.ProductId);
+
+            var url = Path.Combine(ApiRoutes.ImageController, image.FileName);
             image.URL = url;
 
             return Ok(new AddResponse<ImageMetaDTO>(image));

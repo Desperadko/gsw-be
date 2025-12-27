@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using GSW_Core.DTOs.Account;
 using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Requests.Account;
 using System;
@@ -15,11 +16,14 @@ namespace GSW_Core.Validators
         {
             RuleFor(a => a.Credentials.Username)
                 .NotEmpty()
-                .WithMessage("Username should not be empty.");
+                .WithMessage("Username should not be empty.")
+                .OverridePropertyName(nameof(LoginRequest.Credentials.Username));
 
             RuleFor(a => a.Credentials.Password)
                 .NotEmpty()
-                .WithMessage("Password should not be empty.");
+                .WithMessage("Password should not be empty.")
+                .WithName(nameof(LoginRequest.Credentials.Password))
+                .OverridePropertyName(nameof(LoginRequest.Credentials.Password));
         }
     }
 }

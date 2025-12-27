@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using GSW_Core.Requests.Developer;
+using GSW_Core.Requests.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace GSW_Core.Validators
         {
             RuleFor(a => a.Developer.Name)
                 .NotEmpty()
-                .WithMessage("Name should not be empty.");
+                .WithMessage("Name should not be empty.")
+                .OverridePropertyName(nameof(AddDeveloperRequest.Developer.Name));
         }
     }
 }

@@ -11,5 +11,6 @@ namespace GSW_Data.Constants
         public const string ID = "ID";
         public const string USERNAME = "Username";
         public const string PASSWORD = "Password";
+        public const string IMAGE = "Image";
     }
 }

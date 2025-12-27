@@ -14,7 +14,8 @@ namespace GSW_Core.Validators
         {
             RuleFor(a => a.Publisher.Name)
                 .NotEmpty()
-                .WithMessage("Name should not be empty.");
+                .WithMessage("Name should not be empty.")
+                .OverridePropertyName(nameof(AddPublisherRequest.Publisher.Name));
         }
     }
 }
