@@ -43,7 +43,7 @@ namespace GSW.Controllers
 
         [HttpPost("default")]
         [Authorize(Roles = RoleHelper.Admin)]
-        public async Task<ActionResult<AddResponse<ImageMetaDTO>>> AddDefault([FromBody]AddDefaultImageRequest request)
+        public async Task<ActionResult<AddResponse<ImageMetaDTO>>> AddDefault([FromForm]AddDefaultImageRequest request)
         {
             var image = await imageService.AddDefaultAsync(request.ProductId);
 

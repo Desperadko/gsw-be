@@ -28,10 +28,10 @@ namespace GSW_Core.Validators
                 .OverridePropertyName(nameof(AddProductRequest.Product.ReleaseDate));
 
             RuleFor(r => r.Product.Price)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage("Product price should not be empty")
-                .GreaterThanOrEqualTo(0)
-                .WithMessage("Prive should not be a negative number")
+                .GreaterThan(0)
+                .WithMessage("Price should not be a negative number")
                 .OverridePropertyName(nameof(AddProductRequest.Product.Price));
 
             RuleFor(r => r.Product.GenresIds)
