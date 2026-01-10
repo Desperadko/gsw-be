@@ -42,6 +42,7 @@ namespace GSW_Core.Services.Implementations
 
             return developers
                 .Select(d => new DeveloperDTO(d.Id, d.Name))
+                .OrderBy(d => d.Name)
                 .ToList();
         }
     }

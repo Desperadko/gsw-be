@@ -42,6 +42,7 @@ namespace GSW_Core.Services.Implementations
 
             return genres
                 .Select(g => new GenreDTO(g.Id, g.Name))
+                .OrderBy(g => g.Name)
                 .ToList();
         }
     }

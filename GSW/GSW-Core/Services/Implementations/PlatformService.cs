@@ -42,6 +42,7 @@ namespace GSW_Core.Services.Implementations
 
             return platforms
                 .Select(p => new PlatformDTO(p.Id, p.Name))
+                .OrderBy(p => p.Name)
                 .ToList();
         }
     }

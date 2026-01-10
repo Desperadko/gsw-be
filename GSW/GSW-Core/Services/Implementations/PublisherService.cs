@@ -42,6 +42,7 @@ namespace GSW_Core.Services.Implementations
 
             return publishers
                 .Select(p => new PublisherDTO(p.Id, p.Name))
+                .OrderBy(p => p.Name)
                 .ToList();
         }
     }

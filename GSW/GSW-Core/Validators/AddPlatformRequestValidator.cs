@@ -15,8 +15,7 @@ namespace GSW_Core.Validators
         {
             RuleFor(a => a.Platform.Name)
                 .NotEmpty()
-                .WithMessage("Name should not be empty.")
-                .OverridePropertyName(nameof(AddPlatformRequest.Platform.Name));
+                .WithMessage("Platform's name should not be empty.");
         }
     }
 }

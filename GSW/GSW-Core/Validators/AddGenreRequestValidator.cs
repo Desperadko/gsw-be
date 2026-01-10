@@ -14,8 +14,7 @@ namespace GSW_Core.Validators
         {
             RuleFor(a => a.Genre.Name)
                 .NotEmpty()
-                .WithMessage("Name should not be empty.")
-                .OverridePropertyName(nameof(AddGenreRequest.Genre.Name));
+                .WithMessage("Genre's name should not be empty.");
         }
     }
 }

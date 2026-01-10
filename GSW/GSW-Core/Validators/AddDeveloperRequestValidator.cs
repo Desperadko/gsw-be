@@ -15,8 +15,7 @@ namespace GSW_Core.Validators
         {
             RuleFor(a => a.Developer.Name)
                 .NotEmpty()
-                .WithMessage("Name should not be empty.")
-                .OverridePropertyName(nameof(AddDeveloperRequest.Developer.Name));
+                .WithMessage("Developer's name should not be empty.");
         }
     }
 }
