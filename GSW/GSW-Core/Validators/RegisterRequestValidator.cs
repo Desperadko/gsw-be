@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using GSW_Core.Repositories.Interfaces;
-using GSW_Core.Requests;
+using GSW_Core.Requests.Account;
+using GSW_Core.Requests.Product;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,20 @@ namespace GSW_Core.Validators
     {
         public RegisterRequestValidator()
         {
-            RuleFor(a => a.Username)
+            RuleFor(a => a.Credentials.Username)
                 .NotEmpty()
-                .WithMessage("Username should not be empty.");
+                .WithMessage("Username should not be empty.")
+                .OverridePropertyName(nameof(RegisterRequest.Credentials.Username));
 
-            RuleFor(a => a.Email)
+            RuleFor(a => a.Credentials.Email)
                 .NotEmpty()
-                .WithMessage("Email either already exists or is left empty.");
+                .WithMessage("Email should not be empty.")
+                .OverridePropertyName(nameof(RegisterRequest.Credentials.Email));
+
+            RuleFor(a => a.Credentials.Password)
+                .NotEmpty()
+                .WithMessage("Password should not be empty.")
+                .OverridePropertyName(nameof(RegisterRequest.Credentials.Password));
         }
     }
 }

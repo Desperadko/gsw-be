@@ -20,38 +20,38 @@ namespace GSW_Core.Repositories.Implementations
             this.dbContext = dbContext;
         }
 
-        public async Task<Account?> GetById(int id)
+        public async Task<Account?> GetByIdAsync(int id)
         {
             return await dbContext.Accounts.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<Account?> GetByUsername(string username)
+        public async Task<Account?> GetByUsernameAsync(string username)
         {
             return await dbContext.Accounts.FirstOrDefaultAsync(a => a.Username == username);
         }
 
-        public async Task<int> Add(Account account)
+        public async Task<int> AddAsync(Account account)
         {
             await dbContext.Accounts.AddAsync(account);
             return await dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> IdExists(int id)
+        public async Task<bool> IdExistsAsync(int id)
         {
             return await dbContext.Accounts.AnyAsync(a => a.Id == id);
         }
 
-        public async Task<bool> UsernameExists(string username)
+        public async Task<bool> UsernameExistsAsync(string username)
         {
             return await dbContext.Accounts.AnyAsync(a => a.Username == username);
         }
 
-        public async Task<bool> EmailExists(string email)
+        public async Task<bool> EmailExistsAsync(string email)
         {
             return await dbContext.Accounts.AnyAsync(a => a.Email == email);
         }
 
-        public async Task<int> SaveChanges()
+        public async Task<int> SaveChangesAsync()
         {
             return await dbContext.SaveChangesAsync();
         }

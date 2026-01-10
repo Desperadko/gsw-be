@@ -1,8 +1,8 @@
 ﻿using GSW_Core.DTOs.Account;
-using GSW_Core.Requests;
-using GSW_Core.Responses;
+using GSW_Core.Requests.Account;
+using GSW_Core.Responses.Account;
 using GSW_Core.Services.Interfaces;
-using GSW_Core.Utilities.Constants;
+using GSW_Core.Utilities.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -31,7 +31,7 @@ namespace GSW.Controllers
         [HttpGet("{username}")]
         public async Task<ActionResult<AccountDTO>> Get(string username)
         {
-            var result = await accountService.Get(username);
+            var result = await accountService.GetAsync(username);
             return Ok(result);
         }
 
@@ -46,27 +46,27 @@ namespace GSW.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<RegisterResponse>> Register([FromBody]RegisterRequest request)
         {
-            var (id, dto) = await accountService.Register(request);
+            var (id, dto) = await accountService.RegisterAsync(request.Credentials);
 
             var accessToken = jwtService.GenerateAccessToken(id, dto);
             var refreshToken = jwtService.GenerateRefreshToken(id);
 
-            await refreshTokenService.Add(id, refreshToken);
+            await refreshTokenService.AddAsync(id, refreshToken);
 
-            return Ok(new RegisterResponse { Account = dto, Token = accessToken });
+            return Ok(new RegisterResponse(accessToken, dto));
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login([FromBody]LoginRequest request)
         {
-            var (id, dto) = await accountService.Login(request);
+            var (id, dto) = await accountService.LoginAsync(request.Credentials);
 
             var accessToken = jwtService.GenerateAccessToken(id, dto);
             var refreshToken = jwtService.GenerateRefreshToken(id);
 
-            await refreshTokenService.Add(id, refreshToken);
+            await refreshTokenService.AddAsync(id, refreshToken);
 
-            return Ok(new RegisterResponse { Account = dto, Token = accessToken });
+            return Ok(new RegisterResponse(accessToken, dto));
         }
 
         [HttpPost("refresh")]
@@ -78,13 +78,13 @@ namespace GSW.Controllers
             if(int.TryParse(principal.FindFirstValue(ClaimTypes.NameIdentifier), out int accountId))
             {
                 //validate if last refresh token is revoked or expired
-                await refreshTokenService.ValidateLast(accountId);
+                await refreshTokenService.ValidateLastAsync(accountId);
 
-                var dto = await accountService.Get(accountId);
+                var dto = await accountService.GetAsync(accountId);
 
                 var token = jwtService.GenerateAccessToken(accountId, dto);
 
-                return Ok(new RefreshResponse { Token = token });
+                return Ok(new RefreshResponse(token));
             }
 
             return Unauthorized(request);
@@ -96,23 +96,23 @@ namespace GSW.Controllers
         {
             if(int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int accountId))
             {
-                await refreshTokenService.RevokeLast(accountId);
+                await refreshTokenService.RevokeLastAsync(accountId);
 
-                return Ok(new LogoutResponse { Message = "Logged out successfully" });
+                return Ok(new LogoutResponse("Logged out successfully"));
             }
 
-            return Unauthorized(new LogoutResponse { Message = "Couldn't logout"});
+            return Unauthorized(new LogoutResponse("Couldn't logout"));
         }
 
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = RoleHelper.Admin)]
         [HttpPut("{id}/role")]
         public async Task<ActionResult<UpdateRoleReponse>> UpdateRole(int id, [FromBody]UpdateRoleRequest request)
         {
-            await refreshTokenService.RevokeAll(id);
+            await refreshTokenService.RevokeAllAsync(id);
 
-            var account = await accountService.UpdateRole(id, request);
+            var account = await accountService.UpdateRoleAsync(id, request.Role);
 
-            return Ok(new UpdateRoleReponse { Account = account });
+            return Ok(new UpdateRoleReponse(account));
         }
     }
 }

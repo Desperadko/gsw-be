@@ -1,11 +1,11 @@
 ﻿using Azure.Core;
 using GSW_Core.DTOs.Account;
 using GSW_Core.Repositories.Interfaces;
-using GSW_Core.Requests;
+using GSW_Core.Requests.Account;
 using GSW_Core.Responses;
 using GSW_Core.Services.Interfaces;
-using GSW_Core.Utilities.Constants;
 using GSW_Core.Utilities.Errors.Exceptions;
+using GSW_Core.Utilities.Helpers;
 using GSW_Data.Constants;
 using GSW_Data.Models;
 using Microsoft.AspNetCore.Identity;
@@ -37,93 +37,81 @@ namespace GSW_Core.Services.Implementations
             var emailClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) ?? throw new BadRequestException("Invalid claims. No email set.");
             var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role) ?? throw new BadRequestException("Invalid claims. No role set.");
 
-            return new AccountDTO
-            {
-                Username = usernameClaim.Value,
-                Email = emailClaim.Value,
-                Role = roleClaim.Value
-            };
+            return new AccountDTO(usernameClaim.Value, emailClaim.Value, roleClaim.Value);
         }
 
-        public async Task<AccountDTO> Get(string username)
+        public async Task<AccountDTO> GetAsync(string username)
         {
-            var account = await accountRepository.GetByUsername(username);
+            var account = await accountRepository.GetByUsernameAsync(username);
 
             if (account == null) throw new NotFoundException(ErrorFieldConstants.USERNAME, $"Account with username: {username}, does not exist.");
 
-            return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role }; 
+            return new AccountDTO(account.Username, account.Email, account.Role); 
         }
 
-        public async Task<AccountDTO> Get(int id)
+        public async Task<AccountDTO> GetAsync(int id)
         {
-            var account = await accountRepository.GetById(id);
+            var account = await accountRepository.GetByIdAsync(id);
 
             if (account == null) throw new NotFoundException(ErrorFieldConstants.ID, $"Account with id: '{id}', does not exist.");
 
-            return new AccountDTO { Username = account.Username, Email = account.Email, Role = account.Role };
+            return new AccountDTO(account.Username, account.Email, account.Role);
         }
 
-        public async Task<(int accountId, AccountDTO accountDTO)> Register(RegisterRequest request)
+        public async Task<(int accountId, AccountDTO accountDTO)> RegisterAsync(AccountRegisterDTO credentials)
         {
             var account = new Account
             {
-                Username = request.Username,
-                Email = request.Email,
-                Role = RoleConstants.User
+                Username = credentials.Username,
+                Email = credentials.Email,
+                Role = RoleHelper.User
             };
 
-            var dto = new AccountDTO()
-            {
-                Username = account.Username,
-                Email = account.Email,
-                Role = account.Role
-            };
+            var dto = new AccountDTO(account.Username, account.Email, account.Role);
 
-            account.Password = passwordHasher.HashPassword(account, request.Password);
+            account.Password = passwordHasher.HashPassword(account, credentials.Password);
 
             if (!account.IsVaild) throw new BadRequestException("Something went wrong when hashing the password.");
 
-            var count = await accountRepository.Add(account);
+            var count = await accountRepository.AddAsync(account);
             if (count <= 0) throw new BadRequestException("Couldn't add account to database.");
 
             return (account.Id, dto);
         }
 
-        public async Task<(int accountId, AccountDTO accountDTO)> Login(LoginRequest request)
+        public async Task<(int accountId, AccountDTO accountDTO)> LoginAsync(AccountLoginDTO credentials)
         {
-            var account = await accountRepository.GetByUsername(request.Username)
-                ?? throw new NotFoundException(ErrorFieldConstants.USERNAME, $"Username: {request.Username} doesn't exists.");
+            var account = await accountRepository.GetByUsernameAsync(credentials.Username)
+                ?? throw new NotFoundException(ErrorFieldConstants.USERNAME, $"Username: {credentials.Username} doesn't exists.");
             
-            var isVerified = await VerifyPassword(account, request.Password);
+            var isVerified = await VerifyPassword(account, credentials.Password);
             if (!isVerified)
             {
                 throw new UnauthorizedException(ErrorFieldConstants.PASSWORD, "Invalid password.");
             }
 
-            var dto = new AccountDTO
-            {
-                Username = account.Username,
-                Email = account.Email,
-                Role = account.Role
-            };
+            var dto = new AccountDTO(account.Username, account.Email, account.Role);
 
             return (account.Id, dto);
         }
 
-        public async Task<AccountDTO> UpdateRole(int id, UpdateRoleRequest request)
+        public async Task<AccountDTO> UpdateRoleAsync(int id, string role)
         {
-            var account = await accountRepository.GetById(id)
+            var lowerCasedRole = role.ToLower();
+            if (!RoleHelper.IsValidRole(lowerCasedRole)) throw new BadRequestException($"Role: '{role}' doesn't exist");
+
+            var account = await accountRepository.GetByIdAsync(id)
                 ?? throw new NotFoundException(ErrorFieldConstants.ID, $"Account with id: '{id}' doesn't exist.");
 
-            account.Role = request.Role;
+            account.Role = lowerCasedRole;
 
-            var count = await accountRepository.SaveChanges();
+            var count = await accountRepository.SaveChangesAsync();
             if (count <= 0) throw new BadRequestException($"Couldn't update role to account with username: '{account.Username}'");
 
-            return new AccountDTO { Username = account.Username, Email =  account.Email, Role = account.Role };
+            return new AccountDTO(account.Username, account.Email, account.Role);
         }
 
-        public async Task<bool> VerifyPassword(Account account, string providedPassword)
+        private async Task<bool> VerifyPassword(Account account, string providedPassword)
         {
             var result = passwordHasher.VerifyHashedPassword(account, account.Password, providedPassword);
 
@@ -133,7 +121,7 @@ namespace GSW_Core.Services.Implementations
                     return false;
                 case PasswordVerificationResult.SuccessRehashNeeded:
                     account.Password = passwordHasher.HashPassword(account, providedPassword);
-                    await accountRepository.SaveChanges();
+                    await accountRepository.SaveChangesAsync();
                     break;
             }
 

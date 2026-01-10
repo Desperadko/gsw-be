@@ -20,6 +20,7 @@ namespace GSW
             builder.Services.AddServices(builder.Configuration);
             builder.Services.AddValidation();
             builder.Services.AddExceptionFilter();
+            builder.Services.AddInMemoryCache();
 
             var app = builder.Build();
 

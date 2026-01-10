@@ -22,6 +22,21 @@ namespace GSW_Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DeveloperProduct", b =>
+                {
+                    b.Property<int>("DeveloperId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DeveloperId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("DeveloperProduct");
+                });
+
             modelBuilder.Entity("GSW_Data.Models.Account", b =>
                 {
                     b.Property<int>("Id")
@@ -64,6 +79,118 @@ namespace GSW_Data.Migrations
                     b.ToTable("Accounts");
                 });
 
+            modelBuilder.Entity("GSW_Data.Models.Developer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Developers");
+                });
+
+            modelBuilder.Entity("GSW_Data.Models.Genre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("GSW_Data.Models.Platform", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Platforms");
+                });
+
+            modelBuilder.Entity("GSW_Data.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("GSW_Data.Models.Publisher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Publishers");
+                });
+
             modelBuilder.Entity("GSW_Data.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -99,6 +226,66 @@ namespace GSW_Data.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("GenreProduct", b =>
+                {
+                    b.Property<int>("GenresId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GenresId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("GenreProduct");
+                });
+
+            modelBuilder.Entity("PlatformProduct", b =>
+                {
+                    b.Property<int>("PlatformsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PlatformsId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("PlatformProduct");
+                });
+
+            modelBuilder.Entity("PublisherProduct", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PublisherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "PublisherId");
+
+                    b.HasIndex("PublisherId");
+
+                    b.ToTable("PublisherProduct");
+                });
+
+            modelBuilder.Entity("DeveloperProduct", b =>
+                {
+                    b.HasOne("GSW_Data.Models.Developer", null)
+                        .WithMany()
+                        .HasForeignKey("DeveloperId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GSW_Data.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GSW_Data.Models.RefreshToken", b =>
                 {
                     b.HasOne("GSW_Data.Models.Account", "Account")
@@ -108,6 +295,51 @@ namespace GSW_Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("GenreProduct", b =>
+                {
+                    b.HasOne("GSW_Data.Models.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GSW_Data.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PlatformProduct", b =>
+                {
+                    b.HasOne("GSW_Data.Models.Platform", null)
+                        .WithMany()
+                        .HasForeignKey("PlatformsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GSW_Data.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PublisherProduct", b =>
+                {
+                    b.HasOne("GSW_Data.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GSW_Data.Models.Publisher", null)
+                        .WithMany()
+                        .HasForeignKey("PublisherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

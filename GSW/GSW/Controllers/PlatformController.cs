@@ -1,0 +1,41 @@
+﻿using GSW_Core.DTOs.Platform;
+using GSW_Core.Requests.Platform;
+using GSW_Core.Responses.General;
+using GSW_Core.Services.Interfaces;
+using GSW_Core.Utilities.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GSW.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PlatformController : ControllerBase
+    {
+        private readonly IPlatformService platformService;
+
+        public PlatformController(IPlatformService platformService)
+        {
+            this.platformService = platformService;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = RoleHelper.Admin)]
+        public async Task<ActionResult<GetAllResponse<PlatformDTO>>> GetAll()
+        {
+            var platforms = await platformService.GetAllAsync();
+
+            return Ok(new GetAllResponse<PlatformDTO>(platforms));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RoleHelper.Admin)]
+        public async Task<ActionResult<AddResponse<PlatformDTO>>> Add(AddPlatformRequest request)
+        {
+            var platform = await platformService.AddAsync(request.Platform);
+
+            return Ok(new AddResponse<PlatformDTO>(platform));
+        }
+    }
+}
