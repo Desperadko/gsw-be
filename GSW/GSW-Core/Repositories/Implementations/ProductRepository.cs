@@ -19,6 +19,11 @@ namespace GSW_Core.Repositories.Implementations
             this.dbContext = dbContext;
         }
 
+        public IQueryable<Product> Query()
+        {
+            return dbContext.Products;
+        }
+
         public async Task<int> AddAsync(Product product)
         {
             dbContext.ChangeTracker.Clear();

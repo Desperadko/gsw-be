@@ -9,6 +9,8 @@ namespace GSW_Core.Repositories.Interfaces
 {
     public interface IProductRepository
     {
+        IQueryable<Product> Query();
+
         Task<Product?> GetByIdAsync(int id);
         Task<Product?> GetByName(string name);
         Task<int> AddAsync(Product product);

@@ -9,6 +9,7 @@ using GSW_Core.Repositories.Interfaces;
 using GSW_Core.Services.Interfaces;
 using GSW_Core.Utilities.Errors.Exceptions;
 using GSW_Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Immutable;
 
@@ -114,17 +115,10 @@ namespace GSW_Core.Services.Implementations
         {
             var product = await productRepository.GetByIdAsync(id) ?? throw new NotFoundException($"Product with Id: '{id}' doesn't exist");
 
-            var developerDTOs = product.Developers?.Select(d => new DeveloperDTO(d.Id, d.Name)).ToList()
-                ?? throw new NotFoundException("Product's developers were not loaded from the database");
-
-            var publisherDTOs = product.Publishers?.Select(p => new PublisherDTO(p.Id, p.Name)).ToList()
-                ?? throw new NotFoundException("Product's publishers were not loaded from the database");
-
-            var genreDTOs = product.Genres?.Select(d => new GenreDTO(d.Id, d.Name)).ToList()
-                ?? throw new NotFoundException("Product's genres were not loaded from the database");
-
-            var platformDTOs = product.Platforms?.Select(p => new PlatformDTO(p.Id, p.Name)).ToList()
-                ?? throw new NotFoundException("Product's platforms were not loaded from the database");
+            var developerDTOs = product.Developers.Select(d => new DeveloperDTO(d.Id, d.Name)).ToList();
+            var publisherDTOs = product.Publishers.Select(p => new PublisherDTO(p.Id, p.Name)).ToList();
+            var genreDTOs = product.Genres.Select(d => new GenreDTO(d.Id, d.Name)).ToList();
+            var platformDTOs = product.Platforms.Select(p => new PlatformDTO(p.Id, p.Name)).ToList();
 
             return new ProductDTO(
                 product.Id,
@@ -136,6 +130,104 @@ namespace GSW_Core.Services.Implementations
                 publisherDTOs,
                 genreDTOs,
                 platformDTOs);
+        }
+
+        public async Task<IEnumerable<ProductDTO>> GetAllAsync(ProductFilterDTO? filter, SortDTO? sort, PaginationDTO? pagination)
+        {
+            var query = productRepository.Query().AsNoTracking();
+
+            if(filter is not null)
+            {
+                if(filter.DevelopersIds?.Any() == true)
+                {
+                    query = query
+                        .Where(p => p.Developers
+                            .Any(d => filter.DevelopersIds.Contains(d.Id)));
+                }
+
+                if(filter.PublishersIds?.Any() == true)
+                {
+                    query = query
+                        .Where(p => p.Publishers
+                            .Any(p => filter.PublishersIds.Contains(p.Id)));
+                }
+
+                if(filter.GenresIds?.Any() == true)
+                {
+                    query = query
+                        .Where(p => p.Genres
+                            .Any(g => filter.GenresIds.Contains(g.Id)));
+                }
+
+                if(filter.PlatformsIds?.Any() == true)
+                {
+                    query = query
+                        .Where(p => p.Platforms
+                            .Any(p => filter.PlatformsIds.Contains(p.Id)));
+                }
+
+                if (filter.MinPrice.HasValue)
+                {
+                    query = query
+                        .Where(p => p.Price >= filter.MinPrice.Value);
+                }
+
+                if (filter.MaxPrice.HasValue)
+                {
+                    query = query
+                        .Where(p => p.Price <= filter.MaxPrice.Value);
+                }
+            }
+
+            if(sort is not null)
+            {
+                query = sort.SortBy.ToLower() switch
+                {
+                    "name" => sort.SortDirection.ToLower() == "desc"
+                        ? query.OrderByDescending(p => p.Name)
+                        : query.OrderBy(p => p.Name),
+
+                    "releasedate" => sort.SortDirection.ToLower() == "desc"
+                        ? query.OrderByDescending(p => p.ReleaseDate)
+                        : query.OrderBy(p => p.ReleaseDate),
+
+                    "price" => sort.SortDirection.ToLower() == "desc"
+                        ? query.OrderByDescending(p => p.Price)
+                        : query.OrderBy(p => p.Price),
+
+                    _ => query.OrderBy(p => 0)
+                };
+            }
+
+            if(pagination is not null)
+            {
+                query
+                    .Skip((pagination.Page - 1) * pagination.Size)
+                    .Take(pagination.Size);
+            }
+
+            var products = await query.ToListAsync();
+
+            return products
+                .Select(p =>
+                {
+                    var developerDTOs = p.Developers.Select(d => new DeveloperDTO(d.Id, d.Name)).ToList();
+                    var publisherDTOs = p.Publishers.Select(p => new PublisherDTO(p.Id, p.Name)).ToList();
+                    var genreDTOs = p.Genres.Select(d => new GenreDTO(d.Id, d.Name)).ToList();
+                    var platformDTOs = p.Platforms.Select(p => new PlatformDTO(p.Id, p.Name)).ToList();
+
+                    return new ProductDTO(
+                        p.Id,
+                        p.Name,
+                        p.Description,
+                        p.ReleaseDate,
+                        p.Price,
+                        developerDTOs,
+                        publisherDTOs,
+                        genreDTOs,
+                        platformDTOs);
+                })
+                .ToList();
         }
 
         private async Task<ProductComplementaryEntitiesDTOs> GetComplementaryEntitiesAsync()

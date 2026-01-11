@@ -37,6 +37,26 @@ namespace GSW.Controllers
             return Ok(new GetResponse<ProductDTO>(productWithImage));
         }
 
+        [HttpGet]
+        public async Task<ActionResult<GetAllResponse<ProductDTO>>> Get([FromQuery]GetProductsRequest request)
+        {
+            var products = await productService.GetAllAsync(request.Filter, request.Sort, request.Pagination);
+
+            var productsWithImages = new List<ProductDTO>();
+
+            foreach (var product in products)
+            {
+                var imageFileName = imageService.GetFileName(product.Id);
+                var imageURL = ApiRoutes.ImageController + "/" + imageFileName;
+
+                var productWithImage = product with { ImageURL = imageURL };
+
+                productsWithImages.Add(productWithImage);
+            }
+
+            return Ok(new GetAllResponse<ProductDTO>(productsWithImages));
+        }
+
         [HttpPost]
         [Authorize(Roles = RoleHelper.Admin)]
         public async Task<ActionResult<AddResponse<ProductDTO>>> Add([FromBody]AddProductRequest request)
