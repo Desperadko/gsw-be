@@ -24,8 +24,8 @@ namespace GSW.Controllers
             this.imageService = imageService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<GetResponse<ProductDTO>>> Get([FromQuery]int id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetResponse<ProductDTO>>> Get([FromRoute]int id)
         {
             var product = await productService.GetAsync(id);
 

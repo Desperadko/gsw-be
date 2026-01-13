@@ -134,7 +134,13 @@ namespace GSW_Core.Services.Implementations
 
         public async Task<IEnumerable<ProductDTO>> GetAllAsync(ProductFilterDTO? filter, SortDTO? sort, PaginationDTO? pagination)
         {
-            var query = productRepository.Query().AsNoTracking();
+            var query = productRepository
+                .Query()
+                .Include(p => p.Genres)
+                .Include(p => p.Platforms)
+                .Include(p => p.Developers)
+                .Include(p => p.Publishers)
+                .AsNoTracking();
 
             if(filter is not null)
             {
