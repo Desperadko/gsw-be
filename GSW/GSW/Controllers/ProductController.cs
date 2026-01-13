@@ -24,8 +24,8 @@ namespace GSW.Controllers
             this.imageService = imageService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<GetResponse<ProductDTO>>> Get([FromQuery]int id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetResponse<ProductDTO>>> Get([FromRoute]int id)
         {
             var product = await productService.GetAsync(id);
 
@@ -35,6 +35,26 @@ namespace GSW.Controllers
             var productWithImage = product with { ImageURL = imageURL };
 
             return Ok(new GetResponse<ProductDTO>(productWithImage));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<GetAllResponse<ProductDTO>>> Get([FromQuery]GetProductsRequest request)
+        {
+            var products = await productService.GetAllAsync(request.Filter, request.Sort, request.Pagination);
+
+            var productsWithImages = new List<ProductDTO>();
+
+            foreach (var product in products)
+            {
+                var imageFileName = imageService.GetFileName(product.Id);
+                var imageURL = ApiRoutes.ImageController + "/" + imageFileName;
+
+                var productWithImage = product with { ImageURL = imageURL };
+
+                productsWithImages.Add(productWithImage);
+            }
+
+            return Ok(new GetAllResponse<ProductDTO>(productsWithImages));
         }
 
         [HttpPost]

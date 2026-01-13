@@ -30,9 +30,9 @@ namespace GSW_Data.Models
         [Required(ErrorMessage = "Price is required")]
         public decimal Price { get; set; }
 
-        public virtual ICollection<Genre>? Genres { get; set; }
-        public virtual ICollection<Developer>? Developers { get; set; }
-        public virtual ICollection<Publisher>? Publishers { get; set; }
-        public virtual ICollection<Platform>? Platforms { get; set; }
+        public virtual ICollection<Genre> Genres { get; set; } = new List<Genre>();
+        public virtual ICollection<Developer> Developers { get; set; } = new List<Developer>();
+        public virtual ICollection<Publisher> Publishers { get; set; } = new List<Publisher>();
+        public virtual ICollection<Platform> Platforms { get; set; } = new List<Platform>();
     }
 }
