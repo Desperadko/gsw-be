@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.Responses.General
 {
-    public record AddResponse<T>(T DTO) where T : BaseDTO
+    public record AddResponse<T>(T Dto) where T : BaseDTO
     {
     }
 }

@@ -204,10 +204,14 @@ namespace GSW_Core.Services.Implementations
                     _ => query.OrderBy(p => 0)
                 };
             }
-
-            if(pagination is not null)
+            else
             {
-                query
+                query = query.OrderByDescending(p => p.Id);
+            }
+
+            if (pagination is not null)
+            {
+                query = query
                     .Skip((pagination.Page - 1) * pagination.Size)
                     .Take(pagination.Size);
             }

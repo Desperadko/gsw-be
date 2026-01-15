@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace GSW_Core.DTOs
 {
-    public record SortDTO(string SortBy, string SortDirection)
+    public record SortDTO
     {
+        public string SortBy { get; set; } = "";
+        public string SortDirection { get; set; } = "";
     }
 }

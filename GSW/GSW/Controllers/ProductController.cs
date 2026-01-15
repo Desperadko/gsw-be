@@ -29,8 +29,10 @@ namespace GSW.Controllers
         {
             var product = await productService.GetAsync(id);
 
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
             var imageFileName = imageService.GetFileName(id);
-            var imageURL = ApiRoutes.ImageController + "/" + imageFileName;
+            var imageURL = $"{baseUrl}/{ApiRoutes.ImageController}/{imageFileName}";
 
             var productWithImage = product with { ImageURL = imageURL };
 
@@ -42,12 +44,14 @@ namespace GSW.Controllers
         {
             var products = await productService.GetAllAsync(request.Filter, request.Sort, request.Pagination);
 
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
             var productsWithImages = new List<ProductDTO>();
 
             foreach (var product in products)
             {
                 var imageFileName = imageService.GetFileName(product.Id);
-                var imageURL = ApiRoutes.ImageController + "/" + imageFileName;
+                var imageURL = $"{baseUrl}/{ApiRoutes.ImageController}/{imageFileName}";
 
                 var productWithImage = product with { ImageURL = imageURL };
 
