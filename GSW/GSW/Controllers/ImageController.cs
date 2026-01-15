@@ -21,8 +21,8 @@ namespace GSW.Controllers
             this.imageService = imageService;
         }
 
-        [HttpGet]
-        public async Task<FileResult> Get([FromQuery]string fileName)
+        [HttpGet("{fileName}")]
+        public async Task<FileResult> Get([FromRoute]string fileName)
         {
             var image = await imageService.GetAsync(fileName);
 
