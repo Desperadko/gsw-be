@@ -1,12 +1,12 @@
-For DB:
+For DB (while in .sln folder):
 1. docker-compose up
 2. docker-compose start
 
-For Dependencies:
+For Dependencies (migrations are in GSW-Data and startup project is GSW):
 dotnet restore
 
-For Migrations:
-dotnet ef database update
+For Migrations (while in .sln folder):
+dotnet ef database update --project GSW-Data --startup-project GSW
 
 Start the project:
 dotnet run
